@@ -150,7 +150,6 @@ func main() {
 		return c.JSON(webposts)
 	})
 
-	// Logout route
 	app.Post("/api/logout", func(c fiber.Ctx) error {
 		c.ClearCookie("auth_token")
 		return c.JSON(fiber.Map{"message": "Logged out successfully"})
