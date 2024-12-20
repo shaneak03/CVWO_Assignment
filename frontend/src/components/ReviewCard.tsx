@@ -52,7 +52,6 @@ function ReviewCard({
           <Typography variant="h6" sx={{ marginRight: 1 }}>
             {rating}
           </Typography>
-          {/* Set max={10} to enable 10-star rating */}
           <Rating name="read-only" value={rating} readOnly max={10} />
         </Box>
 
