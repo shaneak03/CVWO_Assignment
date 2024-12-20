@@ -13,7 +13,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from 'react-router-dom';
 
-const pages = ['Movies', 'Genres', 'Search', 'Add Posts', 'Add Review'];
+const pages = ['Movies', 'Genres', 'Search', 'Add Post', 'Add Review'];
 const settings = ['Profile', 'Logout'];
 
 function Navbar() {
