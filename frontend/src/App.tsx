@@ -6,6 +6,7 @@ import AddWebPost from './pages/AddWebPost';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
+import Navbar from './components/Navbar'
 
 export const ENDPOINT = "http://localhost:3000";
 
@@ -47,6 +48,7 @@ function App() {
           element={isLoggedIn ? (
             <>
               <Box>{JSON.stringify(webposts)}</Box>
+              <Navbar />
               <Home />
             </>
           ) : (
@@ -58,6 +60,7 @@ function App() {
           element={isLoggedIn ? (
             <>
               <Box>{JSON.stringify(webposts)}</Box>
+              <Navbar />
               <AddWebPost />
             </>
           ) : (
