@@ -75,7 +75,6 @@ function App() {
           path="/register"
           element={<Register onRegisterSuccess={handleRegisterSuccess} />}
         />
-        <Route path="/" element={<Navigate to="/login" />} />
       </Routes>
       <Box display="flex" justifyContent="center" marginTop="1rem">
         <Link to="/login" style={{ marginRight: '1rem' }}>Login</Link>

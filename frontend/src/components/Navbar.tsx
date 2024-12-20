@@ -13,8 +13,8 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from 'react-router-dom';
 
-const pages = ['Movies', 'Genres', 'Search', 'Create Posts'];
-const settings = ['Account', 'Logout'];
+const pages = ['Movies', 'Genres', 'Search', 'Add Posts'];
+const settings = ['Profile', 'Logout'];
 
 function Navbar() {
   const navigate = useNavigate();
@@ -30,18 +30,18 @@ function Navbar() {
   };
 
   function handleNavClick(page: string) {
-    page === "Debts"
-    ? navigate("/debts")
-    : page === "Owed"
-    ? navigate("/owed")
-    : navigate("/friends");
+    page === "Movies"
+    ? navigate("/movies")
+    : page === "Genres"
+    ? navigate("/genres")
+    : page === ("Search")
+    ? navigate("/search")
+    : navigate("/addwebpost");
   }
 
   function handleSettingClick(page: string) {
-    page === "Account"
+    page === "Profile"
     ? navigate("/profile")
-    : page === "Add Friends"
-    ? navigate("/addfriends")
     : navigate("/login");
   }
 
