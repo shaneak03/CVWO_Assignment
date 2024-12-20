@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
 import Navbar from './components/Navbar'
+import AddReview from './pages/AddReview';
 
 export const ENDPOINT = "http://localhost:3000";
 
@@ -62,6 +63,18 @@ function App() {
               <Box>{JSON.stringify(webposts)}</Box>
               <Navbar />
               <AddWebPost />
+            </>
+          ) : (
+            <Navigate to="/login" />
+          )}
+        />
+        <Route
+          path="/addreview"
+          element={isLoggedIn ? (
+            <>
+              <Box>{JSON.stringify(webposts)}</Box>
+              <Navbar />
+              <AddReview />
             </>
           ) : (
             <Navigate to="/login" />
