@@ -25,7 +25,6 @@ function AddReview() {
     setSpoiler(event.target.checked);
   }
 
-  // Function to handle rating change
   function handleRatingChange(event: React.ChangeEvent<{}>, value: number | null) {
     setRating(value ?? 5);
   }
@@ -72,7 +71,8 @@ function AddReview() {
           style={{ height: "100vh" }}
           alignItems="center"
         >
-          <Typography variant="h2" style={{ marginTop: "4rem", marginBottom: "1rem" }}>
+          <Typography variant="h2" style={{ marginTop: "4rem", marginBottom: "1rem", textAlign: "center"
+           }}>
             Add Review
           </Typography>
           <form style={{ width: "50%", textAlign: "center" }} onSubmit={submit}>

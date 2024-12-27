@@ -70,7 +70,6 @@ function App() {
           path="/addreview"
           element={isLoggedIn ? (
             <>
-              <Box>{JSON.stringify(webposts)}</Box>
               <AddReview />
             </>
           ) : (
