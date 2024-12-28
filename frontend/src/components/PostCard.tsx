@@ -34,7 +34,7 @@ function PostCard({
   return (
     <Card
       sx={{
-        maxWidth: { xs: "100%", sm: "75%", md: "50%" },
+        width: { xs: "100%", sm: "75%", md: "50%" },
         margin: "1rem auto",
         padding: "1rem",
         boxShadow: 3,

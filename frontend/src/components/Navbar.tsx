@@ -35,7 +35,7 @@ function Navbar() {
     : page === "Genres"
     ? navigate("/genres")
     : page === ("Search")
-    ? navigate("/search")
+    ? navigate("/searchpage")
     : page === ("Add Post")
     ? navigate("/addwebpost")
     : navigate("/addreview");

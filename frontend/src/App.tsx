@@ -8,6 +8,7 @@ import Register from './pages/Register';
 import Home from './pages/Home';
 import AddReview from './pages/AddReview';
 import Movies from './pages/Movies';
+import SearchPage from './pages/SearchPage';
 
 export const ENDPOINT = "http://localhost:3000";
 
@@ -72,6 +73,17 @@ function App() {
             <>
               <Box>{JSON.stringify(webposts)}</Box>
               <AddReview />
+            </>
+          ) : (
+            <Navigate to="/login" />
+          )}
+        />
+        <Route
+          path="/searchpage"
+          element={isLoggedIn ? (
+            <>
+              <Box>{JSON.stringify(webposts)}</Box>
+              <SearchPage />
             </>
           ) : (
             <Navigate to="/login" />
