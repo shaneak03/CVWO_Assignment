@@ -9,8 +9,11 @@ import {
   CardHeader,
   Avatar,
   Chip,
+  IconButton,
 } from "@mui/material";
 import { red } from "@mui/material/colors";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 function PostCard({
   title,
@@ -18,17 +21,40 @@ function PostCard({
   tags,
   spoiler,
   creator,
+  votes,
 }: {
   title: string;
   content: string;
   tags: string[];
   spoiler: boolean;
   creator: string;
+  votes: number;
 }) {
   const [showFullContent, setShowFullContent] = useState(false);
+  const [upvoted, setUpvoted] = useState(false);
+  const [downvoted, setDownvoted] = useState(false);
+  const netVotes = upvoted ? 1 : downvoted ? -1 : 0;
 
   function handleShowMore() {
     setShowFullContent(!showFullContent);
+  }
+
+  function handleUpvote() {
+    if (upvoted) {
+      setUpvoted(false);
+    } else {
+      setUpvoted(true);
+      setDownvoted(false);
+    }
+  }
+
+  function handleDownvote() {
+    if (downvoted) {
+      setDownvoted(false);
+    } else {
+      setDownvoted(true);
+      setUpvoted(false);
+    }
   }
 
   return (
@@ -81,6 +107,21 @@ function PostCard({
       </CardContent>
 
       <CardActions sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+      <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <IconButton
+            onClick={handleUpvote}
+            color={upvoted ? "primary" : "default"}
+          >
+            <ArrowUpwardIcon />
+          </IconButton>
+          <Typography variant="body2">{votes + netVotes}</Typography>
+          <IconButton
+            onClick={handleDownvote}
+            color={downvoted ? "error" : "default"}
+          >
+            <ArrowDownwardIcon />
+          </IconButton>
+        </Box>
         <Button size="small" variant="contained" onClick={handleShowMore}>
           {showFullContent ? "Show Less" : "Show More"}
         </Button>

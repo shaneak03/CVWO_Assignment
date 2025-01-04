@@ -6,7 +6,7 @@ const test = "Lorem ipsum odor amet, consectetuer adipiscing elit. Potenti elit 
 function Movies() {
     return <><Navbar />
             <ReviewCard content={test} rating={7} spoiler={false} creator="me"/>
-            <PostCard title="blah" content={test} tags={["none"]} spoiler={true} creator="me"/>
+            <PostCard title="blah" content={test} tags={["none"]} spoiler={true} creator="me" votes={4}/>
         </>
 }
 
