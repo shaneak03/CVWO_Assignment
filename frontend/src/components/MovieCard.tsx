@@ -34,6 +34,42 @@ const movies: Movie[] = [
     image: "https://via.placeholder.com/150",
     tag: "HD",
   },
+  {
+    title: "Gladiator II",
+    year: 2024,
+    duration: "148m",
+    image: "https://via.placeholder.com/150",
+    tag: "HD",
+  },
+  {
+    title: "Gladiator II",
+    year: 2024,
+    duration: "148m",
+    image: "https://via.placeholder.com/150",
+    tag: "HD",
+  },
+  {
+    title: "Gladiator II",
+    year: 2024,
+    duration: "148m",
+    image: "https://via.placeholder.com/150",
+    tag: "HD",
+  },
+  {
+    title: "Gladiator II",
+    year: 2024,
+    duration: "148m",
+    image: "https://via.placeholder.com/150",
+    tag: "HD",
+  },
+
+  {
+    title: "Gladiator II",
+    year: 2024,
+    duration: "148m",
+    image: "https://via.placeholder.com/150",
+    tag: "HD",
+  },
   // Add more movie objects
 ];
 
@@ -78,25 +114,31 @@ function MovieCard(props: Movie) {
 // Define the MovieGrid component as a normal function
 function MovieGrid() {
   return (
-    <Box sx={{ padding: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Movie Gallery
-      </Typography>
-      <Grid container spacing={3}>
-        {movies.map(function (movie, index) {
-          return (
-            <Grid item xs={6} sm={4} md={3} lg={2} key={index}>
-              <MovieCard
-                title={movie.title}
-                year={movie.year}
-                duration={movie.duration}
-                image={movie.image}
-                tag={movie.tag}
-              />
-            </Grid>
-          );
-        })}
-      </Grid>
+    <Box sx={{ padding: 3, display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh" }}>
+      <Box>
+        <Typography variant="h4" gutterBottom>
+          Movie Gallery
+        </Typography>
+        <Grid
+          container
+          columnSpacing={3}
+          rowSpacing={3}
+        >
+          {movies.map(function (movie, index) {
+            return (
+              <Grid item xs={6} sm={4} md={3} lg={3} key={index}>
+                <MovieCard
+                  title={movie.title}
+                  year={movie.year}
+                  duration={movie.duration}
+                  image={movie.image}
+                  tag={movie.tag}
+                />
+              </Grid>
+            );
+          })}
+        </Grid>
+      </Box>
     </Box>
   );
 }
