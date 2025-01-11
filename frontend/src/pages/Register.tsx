@@ -10,6 +10,7 @@ interface RegisterProps {
 
 function Register({ onRegisterSuccess }: RegisterProps) {
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -29,8 +30,7 @@ function Register({ onRegisterSuccess }: RegisterProps) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password }),
-        credentials: "include",
+        body: JSON.stringify({ username, email, password }), 
       });
 
       response.then((res) => {
@@ -79,6 +79,14 @@ function Register({ onRegisterSuccess }: RegisterProps) {
           margin="normal"
           value={username}
           onChange={(event) => setUsername(event.target.value.trim())}
+        />
+        <TextField
+          label="Email"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={email}
+          onChange={(event) => setEmail(event.target.value.trim())}
         />
         <TextField
           label="Password"

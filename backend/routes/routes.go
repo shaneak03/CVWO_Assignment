@@ -8,6 +8,10 @@ import (
 )
 
 func SetupRoutes(router *gin.Engine) {
+	// Apply CORS middleware
+	router.Use(utils.SetupCORS())
+
+	// Apply JWT middleware to protect routes
 	router.Use(utils.JWTMiddleware())
 
 	// Authentication routes
