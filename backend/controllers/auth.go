@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"backend/utils"
+	"github.com/shaneak03/CVWO_Assignment/backend/utils"
 
 	"github.com/gin-gonic/gin"
 )

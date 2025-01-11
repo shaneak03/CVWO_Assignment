@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"backend/controllers"
-	"backend/utils"
+	"github.com/shaneak03/CVWO_Assignment/backend/controllers"
+	"github.com/shaneak03/CVWO_Assignment/backend/utils"
 
 	"github.com/gin-gonic/gin"
 )
