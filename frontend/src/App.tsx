@@ -22,7 +22,7 @@ const API = (url: string) => fetch(`${ENDPOINT}/${url}`,  {
 
 function App() {
   const [webposts, setWebposts] = useState([]);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   useEffect(() => {
     if (isLoggedIn) {
