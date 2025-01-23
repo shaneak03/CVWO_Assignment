@@ -12,6 +12,7 @@ function SearchPage() {
       tags: ["React", "JavaScript", "Frontend"],
       spoiler: false,
       creator: "John Doe",
+      votes: 5,
     },
     {
       title: "Advanced CSS Techniques",
@@ -19,6 +20,7 @@ function SearchPage() {
       tags: ["CSS", "Web Design", "Frontend"],
       spoiler: false,
       creator: "Jane Smith",
+      votes: 5,
     },
     {
       title: "Understanding TypeScript",
@@ -26,6 +28,7 @@ function SearchPage() {
       tags: ["TypeScript", "JavaScript", "Programming"],
       spoiler: false,
       creator: "Alice Johnson",
+      votes: 5,
     },
   ]);
 
@@ -69,6 +72,7 @@ function SearchPage() {
               tags={post.tags}
               spoiler={post.spoiler}
               creator={post.creator}
+              votes={post.votes}
             />
           ))}
           {filteredPosts.length === 0 && (
