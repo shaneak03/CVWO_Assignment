@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/shaneak03/CVWO_Assignment/backend/initialisers"
 	"github.com/shaneak03/CVWO_Assignment/backend/models"
+	initialisers "github.com/shaneak03/CVWO_Assignment/backend/utils"
 )
 
 // sign up user

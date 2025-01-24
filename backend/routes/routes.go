@@ -1,10 +1,9 @@
 package routes
 
 import (
-	"github.com/shaneak03/CVWO_Assignment/backend/controllers"
-	"github.com/shaneak03/CVWO_Assignment/backend/initialisers"
-
 	"github.com/gin-gonic/gin"
+	"github.com/shaneak03/CVWO_Assignment/backend/controllers"
+	initialisers "github.com/shaneak03/CVWO_Assignment/backend/utils"
 )
 
 func SetupRoutes(router *gin.Engine) {

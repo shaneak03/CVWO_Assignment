@@ -9,7 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5"
-	"github.com/shaneak03/CVWO_Assignment/backend/initialisers"
+	initialisers "github.com/shaneak03/CVWO_Assignment/backend/utils"
 )
 
 var conn *pgx.Conn

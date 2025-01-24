@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/shaneak03/CVWO_Assignment/backend/initialisers"
 	"github.com/shaneak03/CVWO_Assignment/backend/routes"
+	initialisers "github.com/shaneak03/CVWO_Assignment/backend/utils"
 )
 
 func init() {
