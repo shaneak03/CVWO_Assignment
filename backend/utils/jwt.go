@@ -2,15 +2,15 @@ package initialisers
 
 import (
 	"fmt"
-	"time"
-
 	"net/http"
+	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var jwtSecret = []byte("your-secret-key")
+var jwtSecret = []byte(os.Getenv("JWT_SECRET")) // Read the secret key from environment variables
 
 func GenerateJWT(userID string) (string, error) {
 	claims := &jwt.RegisteredClaims{
