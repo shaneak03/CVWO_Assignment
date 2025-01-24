@@ -22,4 +22,7 @@ func SetupRoutes(router *gin.Engine) {
 	router.GET("/api/webposts", controllers.GetWebPosts)
 	router.POST("/api/webposts", controllers.CreateWebPost)
 	router.PATCH("/api/webposts/:id", controllers.UpdateWebPost)
+
+	// Movie details route
+	router.GET("/api/movies/:id", controllers.GetMovieDetails)
 }

@@ -12,9 +12,9 @@ import (
 
 var jwtSecret = []byte("your-secret-key")
 
-func GenerateJWT(username string) (string, error) {
+func GenerateJWT(userID string) (string, error) {
 	claims := &jwt.RegisteredClaims{
-		Subject:   username,
+		Subject:   userID,
 		ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
 	}
 
