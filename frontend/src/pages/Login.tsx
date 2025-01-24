@@ -39,21 +39,21 @@ function Login() {
       direction="column"
       alignItems="center"
       justifyContent="center"
-      style={{ height: "100vh" }}
+      style={{ height: "100vh", padding: "0 1rem" }}
     >
       <Box
         component="form"
         onSubmit={handleLogin}
-        style={{
-          width: "30%",
+        sx={{
+          width: { xs: "100%", sm: "75%", md: "50%", lg: "30%" },
           padding: "2rem",
           border: "1px solid #ddd",
           borderRadius: "8px",
           backgroundColor: "#fff",
         }}
       >
-        <Typography variant="h4" align="center" gutterBottom>
-          Login
+        <Typography variant="h3" align="center" gutterBottom>
+          Login to Start Posting and Reviewing
         </Typography>
 
         {error && <Alert severity="error">{error}</Alert>}
@@ -80,7 +80,7 @@ function Login() {
           color="primary"
           fullWidth
           type="submit"
-          style={{ marginTop: "1rem" }}
+          sx={{ marginTop: "1rem" }}
         >
           Login
         </Button>
@@ -90,9 +90,20 @@ function Login() {
             color="primary"
             component={Link}
             to="/register"
-            style={{ textDecoration: "none" }}
+            sx={{ textDecoration: "none" }}
           >
             Don't have an account? Register
+          </Button>
+        </Box>
+        <Box display="flex" justifyContent="center" marginTop="1rem">
+          <Button
+            variant="text"
+            color="primary"
+            component={Link}
+            to="/"
+            sx={{ textDecoration: "none" }}
+          >
+            Back to Homepage
           </Button>
         </Box>
       </Box>

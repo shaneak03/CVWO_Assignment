@@ -21,7 +21,6 @@ interface Movie {
   poster: string;
 }
 
-
 // Example movies list
 const moviesList: Movie[] = [
   {
@@ -87,6 +86,20 @@ const moviesList: Movie[] = [
   // Add more movie objects
 ];
 
+// Fetch movies from an API
+const fetchMovies = async () => {
+  try {
+    const response = await fetch("https://api.example.com/movies");
+    if (!response.ok) {
+      throw new Error("Failed to fetch movies");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    return moviesList; // Fallback to the example movies list
+  }
+};
 
 const MovieCard = ({ title, year, runtime, genre, director, actors, plot, poster }:Movie) => {
   return (
@@ -124,7 +137,15 @@ const MovieCard = ({ title, year, runtime, genre, director, actors, plot, poster
 
 // Define the MovieGrid component as a normal function
 function MovieGrid() {
-  const [movies, setMovies] = useState<Movie[]>(moviesList);
+  const [movies, setMovies] = useState<Movie[]>([]);
+
+  useEffect(() => {
+    const loadMovies = async () => {
+      const fetchedMovies = await fetchMovies();
+      setMovies(fetchedMovies);
+    };
+    loadMovies();
+  }, []);
 
   const sortByDate = () => {
     const sorted = [...movies].sort((a, b) => parseInt(b.year) - parseInt(a.year));

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { TextField, Button, Grid, Typography, Box, Alert } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom"; 
+import { Link, useNavigate } from "react-router-dom";
 import supabase from "../supabase";
 
 function Register() {
@@ -10,7 +10,7 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const createUser = async (userData: { id: string; username: string; email: string }) => {
     const res = await fetch(`${import.meta.env.VITE_SERVER_API_URL}/api/register`, {
@@ -70,13 +70,13 @@ function Register() {
       direction="column"
       alignItems="center"
       justifyContent="center"
-      style={{ height: "100vh" }}
+      style={{ height: "100vh", padding: "0 1rem" }}
     >
       <Box
         component="form"
         onSubmit={handleRegister}
-        style={{
-          width: "30%",
+        sx={{
+          width: { xs: "100%", sm: "75%", md: "50%", lg: "30%" },
           padding: "2rem",
           border: "1px solid #ddd",
           borderRadius: "8px",
@@ -128,7 +128,7 @@ function Register() {
           color="primary"
           fullWidth
           type="submit"
-          style={{ marginTop: "1rem" }}
+          sx={{ marginTop: "1rem" }}
         >
           Register
         </Button>
@@ -136,11 +136,22 @@ function Register() {
           <Button
             variant="text"
             color="primary"
-            component={Link} 
+            component={Link}
             to="/login"
-            style={{ textDecoration: "none" }}
+            sx={{ textDecoration: "none" }}
           >
             Already have an account? Login
+          </Button>
+        </Box>
+        <Box display="flex" justifyContent="center" marginTop="1rem">
+          <Button
+            variant="text"
+            color="primary"
+            component={Link}
+            to="/"
+            sx={{ textDecoration: "none" }}
+          >
+            Back to Homepage
           </Button>
         </Box>
       </Box>

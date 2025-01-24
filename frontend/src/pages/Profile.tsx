@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography, Grid, Card, CardContent, Avatar } from "@mui/material";
 import supabase from "../supabase";
+import { ENDPOINT } from "../App";
 
 interface Post {
   id: number;
@@ -19,7 +20,7 @@ interface Review {
 
 interface UserProfile {
   username: string;
-  profile_picture: string;
+  email: string;
 }
 
 function Profile() {
@@ -36,16 +37,15 @@ function Profile() {
         return;
       }
 
-      const { data: profileData, error: profileError } = await supabase
-        .from("profiles")
-        .select("username, profile_picture")
-        .eq("id", user?.id)
-        .single();
-
-      if (profileError) {
-        console.error("Error fetching user profile:", profileError);
-      } else {
+      try {
+        const response = await fetch(`${ENDPOINT}/api/users/${user?.id}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch user details");
+        }
+        const profileData = await response.json();
         setUserProfile(profileData);
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
       }
     }
 
@@ -93,11 +93,13 @@ function Profile() {
       {userProfile && (
         <Box sx={{ display: "flex", alignItems: "center", marginBottom: 4 }}>
           <Avatar
-            src={userProfile.profile_picture}
             alt={userProfile.username}
             sx={{ width: 80, height: 80, marginRight: 2 }}
           />
           <Typography variant="h4">{userProfile.username}</Typography>
+          <Typography variant="body1" color="textSecondary" sx={{ marginLeft: 2 }}>
+            {userProfile.email}
+          </Typography>
         </Box>
       )}
 

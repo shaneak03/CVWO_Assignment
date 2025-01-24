@@ -6,41 +6,14 @@ import (
 	initialisers "github.com/shaneak03/CVWO_Assignment/backend/utils"
 )
 
-// sign up user
-func HandleUserSignUp(c *gin.Context) {
-	// Get data off request body
-	var body struct {
-		ID       string
-		Username string
-		Email    string
-	}
-	c.Bind(&body)
-
-	// Create user
-	user := models.User{ID: body.ID, Username: body.Username, Email: body.Email}
-	res := initialisers.DB.Create(&user)
-
-	if res.Error != nil {
-		c.JSON(400, gin.H{
-			"error": res.Error.Error(),
-		})
-		return
-	}
-
-	// Return it
-	c.JSON(200, gin.H{
-		"created_user": user,
-	})
-}
-
 // get user details
 func GetUserDetails(c *gin.Context) {
-	// Get data off request body
+	// Get user ID from request parameters
 	userId := c.Param("user_id")
 
-	// Create user
-	user := models.User{ID: userId}
-	res := initialisers.DB.First(&user)
+	// Find user by ID
+	var user models.User
+	res := initialisers.DB.First(&user, "id = ?", userId)
 
 	if res.Error != nil {
 		c.JSON(400, gin.H{
@@ -49,10 +22,12 @@ func GetUserDetails(c *gin.Context) {
 		return
 	}
 
-	// Return it
+	// Return username and email
 	c.JSON(200, gin.H{
-		"user": user,
+		"username": user.Username,
+		"email":    user.Email,
 	})
+
 }
 
 // change user details

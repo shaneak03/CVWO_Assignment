@@ -61,58 +61,70 @@ function AddReview() {
   }
 
   return (
-    <>
-      <div>
-        <Grid
-          container
-          direction="column"
-          style={{ height: "100vh" }}
-          alignItems="center"
+    <Grid
+      container
+      direction="column"
+      alignItems="center"
+      justifyContent="center"
+      style={{ height: "100vh", padding: "0 1rem" }}
+    >
+      <Box
+        component="form"
+        onSubmit={submit}
+        sx={{
+          width: { xs: "100%", sm: "75%", md: "50%", lg: "30%" },
+          padding: "2rem",
+          border: "1px solid #ddd",
+          borderRadius: "8px",
+          backgroundColor: "#fff",
+        }}
+      >
+        <Typography variant="h4" align="center" gutterBottom>
+          Add Review
+        </Typography>
+        <TextField
+          label="Review"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          multiline
+          rows={20}
+          onChange={handleContent}
+          value={content}
+        />
+        <Box marginY={2}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={spoiler}
+                onChange={handleSpoilerChange}
+                color="primary"
+              />
+            }
+            label="Contains Spoilers"
+          />
+        </Box>
+        <Box marginY={2}>
+          <Typography gutterBottom>Movie Rating</Typography>
+          <Rating
+            name="movie-rating"
+            value={rating}
+            onChange={handleRatingChange}
+            max={10}
+            precision={1}
+          />
+        </Box>
+        <Button
+          variant="contained"
+          color="primary"
+          fullWidth
+          type="submit"
+          sx={{ marginTop: "1rem" }}
         >
-          <Typography variant="h2" style={{ marginTop: "4rem", marginBottom: "1rem", textAlign: "center"
-           }}>
-            Add Review
-          </Typography>
-          <form style={{ width: "50%", textAlign: "center" }} onSubmit={submit}>
-            <TextField
-              label="Review"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              multiline
-              rows={20}
-              onChange={handleContent}
-              value={content}
-            />
-            <Box marginY={2}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={spoiler}
-                    onChange={handleSpoilerChange}
-                    color="primary"
-                  />
-                }
-                label="Contains Spoilers"
-              />
-            </Box>
-            <Box marginY={2}>
-              <Typography gutterBottom>Movie Rating</Typography>
-              <Rating
-                name="movie-rating"
-                value={rating}
-                onChange={handleRatingChange}
-                max={10}
-                precision={1}
-              />
-            </Box>
-            <Button variant="contained" color="primary" type="submit" style={{ marginTop: "1rem" }}>
-              Submit Post
-            </Button>
-          </form>
-        </Grid>
-      </div>
-    </>
+          Submit Review
+        </Button>
+      </Box>
+    </Grid>
   );
 }
 

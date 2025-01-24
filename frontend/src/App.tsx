@@ -1,6 +1,6 @@
 import './App.css';
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation, Navigate } from 'react-router-dom';
 import AddWebPost from './pages/AddWebPost';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -44,77 +44,15 @@ function AppContent() {
     <>
       {!hideNavbarRoutes.includes(location.pathname) && <Navbar />}
       <Routes>
-        <Route
-          path="/"
-          element={isLoggedIn ? (
-            <>
-              <div>{JSON.stringify(webposts)}</div>
-              <Home />
-            </>
-          ) : (
-            <Navigate to="/login" />
-          )}
-        />
-        <Route
-          path="/addwebpost"
-          element={isLoggedIn ? (
-            <>
-              <div>{JSON.stringify(webposts)}</div>
-              <AddWebPost />
-            </>
-          ) : (
-            <Navigate to="/login" />
-          )}
-        />
-        <Route
-          path="/addreview"
-          element={isLoggedIn ? (
-            <>
-              <div>{JSON.stringify(webposts)}</div>
-              <AddReview />
-            </>
-          ) : (
-            <Navigate to="/login" />
-          )}
-        />
-        <Route
-          path="/searchpage"
-          element={isLoggedIn ? (
-            <>
-              <div>{JSON.stringify(webposts)}</div>
-              <SearchPage />
-            </>
-          ) : (
-            <Navigate to="/login" />
-          )}
-        />
-        <Route
-          path="/movies"
-          element={isLoggedIn ? (
-            <>
-              <div>{JSON.stringify(webposts)}</div>
-              <Movies />
-            </>
-          ) : (
-            <Navigate to="/login" />
-          )}
-        />
-        <Route
-          path="/login"
-          element={<Login />}
-        />
-        <Route
-          path="/register"
-          element={<Register />}
-        />
-        <Route
-          path="/profile"
-          element={isLoggedIn ? <Profile /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/movie/:imdbID"
-          element={isLoggedIn ? <MovieDetails /> : <Navigate to="/login" />}
-        />
+        <Route path="/" element={<Home />} />
+        <Route path="/addwebpost" element={isLoggedIn ? <AddWebPost /> : <Navigate to="/login" />} />
+        <Route path="/addreview" element={isLoggedIn ? <AddReview /> : <Navigate to="/login" />} />
+        <Route path="/searchpage" element={<SearchPage />} />
+        <Route path="/movies" element={<Movies />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/movie/:imdbID" element={<MovieDetails />} />
       </Routes>
     </>
   );

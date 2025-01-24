@@ -25,4 +25,7 @@ func SetupRoutes(router *gin.Engine) {
 
 	// Movie details route
 	router.GET("/api/movies/:id", controllers.GetMovieDetails)
+
+	// User details route
+	router.GET("/api/users/:id", controllers.GetUserDetails)
 }

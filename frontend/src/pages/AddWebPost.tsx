@@ -79,13 +79,24 @@ function AddWebPost() {
         <Grid
           container
           direction="column"
-          style={{ height: "100vh" }}
+          style={{ height: "100vh", padding: "0 1rem" }}
           alignItems="center"
+          justifyContent="center"
         >
-          <Typography variant="h2" style={{ marginTop: "4rem", marginBottom: "1rem" }}>
-            Add a New Post
-          </Typography>
-          <form style={{ width: "50%", textAlign: "center" }} onSubmit={submit}>
+          <Box
+            component="form"
+            onSubmit={submit}
+            sx={{
+              width: { xs: "100%", sm: "75%", md: "50%", lg: "30%" },
+              padding: "2rem",
+              border: "1px solid #ddd",
+              borderRadius: "8px",
+              backgroundColor: "#fff",
+            }}
+          >
+            <Typography variant="h4" align="center" gutterBottom>
+              Add a New Post
+            </Typography>
             <TextField
               label="Post Title"
               variant="outlined"
@@ -139,10 +150,16 @@ function AddWebPost() {
                 label="Contains Spoilers"
               />
             </Box>
-            <Button variant="contained" color="primary" type="submit" style={{ marginTop: "1rem" }}>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              type="submit"
+              sx={{ marginTop: "1rem" }}
+            >
               Submit Post
             </Button>
-          </form>
+          </Box>
         </Grid>
       </div>
     </>
