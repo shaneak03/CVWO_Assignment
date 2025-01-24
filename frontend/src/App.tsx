@@ -13,7 +13,7 @@ import MovieDetails from './pages/MovieDetails';
 import { UserProvider, useUser } from './hooks/User';
 import Navbar from './components/Navbar';
 
-export const ENDPOINT = "http://localhost:3000";
+export const ENDPOINT = import.meta.env.VITE_SERVER_API_URL;
 
 const API = (url: string) => fetch(`${ENDPOINT}/${url}`,  {
   method: 'GET',

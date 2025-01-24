@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"os"
 
 	"github.com/gin-contrib/cors"
@@ -39,5 +40,11 @@ func main() {
 		port = "8080" // Default port if not set
 	}
 
-	r.Run(":" + port)
+	// Log server start
+	log.Println("Starting server on port " + port)
+
+	err := r.Run(":" + port)
+	if err != nil {
+		log.Fatalf("Failed to start server: %v", err)
+	}
 }

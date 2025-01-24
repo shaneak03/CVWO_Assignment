@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography, Grid, Card, CardContent, Avatar } from "@mui/material";
 import supabase from "../supabase";
-import { ENDPOINT } from "../App";
+
+const ENDPOINT = import.meta.env.VITE_SERVER_API_URL;
 
 interface Post {
   id: number;
@@ -38,11 +39,22 @@ function Profile() {
       }
 
       try {
-        const response = await fetch(`${ENDPOINT}/api/users/${user?.id}`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch user details");
+        const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+        if (sessionError || !sessionData.session) {
+          throw new Error("Failed to get session");
         }
-        const profileData = await response.json();
+
+        const response = await fetch(`${ENDPOINT}/api/users/${user?.id}`, {
+          headers: {
+            Authorization: `Bearer ${sessionData.session.access_token}`,
+          },
+        });
+        const responseText = await response.text(); // Get response text
+        console.log("Response Text:", responseText); // Log response text
+        if (!response.ok) {
+          throw new Error(`Failed to fetch user details: ${responseText}`);
+        }
+        const profileData = JSON.parse(responseText); // Parse response text as JSON
         setUserProfile(profileData);
       } catch (error) {
         console.error("Error fetching user profile:", error);
