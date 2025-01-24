@@ -9,6 +9,9 @@ import Home from './pages/Home';
 import AddReview from './pages/AddReview';
 import Movies from './pages/Movies';
 import SearchPage from './pages/SearchPage';
+import Profile from './pages/Profile';
+import MovieDetails from './pages/MovieDetails';
+import { User } from './hooks/User';
 
 export const ENDPOINT = "http://localhost:3000";
 
@@ -22,7 +25,7 @@ const API = (url: string) => fetch(`${ENDPOINT}/${url}`,  {
 
 function App() {
   const [webposts, setWebposts] = useState([]);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const { isLoggedIn, userId } = User();
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -34,16 +37,13 @@ function App() {
     }
   }, [isLoggedIn]);
 
-  const handleLoginSuccess = () => {
-    setIsLoggedIn(true);
-  };
-
-  const handleRegisterSuccess = () => {
-    setIsLoggedIn(true);  
-  };
-
   return (
     <Router>
+      <Box display="flex" justifyContent="center" marginTop="1rem">
+        <Link to="/login" style={{ marginRight: '1rem' }}>Login</Link>
+        <Link to="/register" style={{ marginRight: '1rem' }}>Register</Link>
+        {isLoggedIn && <Link to="/profile">Profile</Link>}
+      </Box>
       <Routes>
         <Route
           path="/"
@@ -102,17 +102,21 @@ function App() {
         />
         <Route
           path="/login"
-          element={<Login onLoginSuccess={handleLoginSuccess} />}
+          element={<Login />}
         />
         <Route
           path="/register"
-          element={<Register onRegisterSuccess={handleRegisterSuccess} />}
+          element={<Register />}
+        />
+        <Route
+          path="/profile"
+          element={isLoggedIn ? <Profile /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/movie/:imdbID"
+          element={isLoggedIn ? <MovieDetails /> : <Navigate to="/login" />}
         />
       </Routes>
-      <Box display="flex" justifyContent="center" marginTop="1rem">
-        <Link to="/login" style={{ marginRight: '1rem' }}>Login</Link>
-        <Link to="/register">Register</Link>
-      </Box>
     </Router>
   );
 }

@@ -5,7 +5,6 @@ import {
   CardContent,
   Typography,
   Box,
-  Chip,
   Grid,
   Button,
 } from "@mui/material";
@@ -13,69 +12,89 @@ import {
 // Define the interface for movies
 interface Movie {
   title: string;
-  date: number;
-  duration: string;
-  image: string;
-  tag?: string; // e.g., HD, CAM
+  year: string;
+  runtime: string;
+  genre: string;
+  director: string;
+  actors: string;
+  plot: string;
+  poster: string;
 }
+
 
 // Example movies list
 const moviesList: Movie[] = [
   {
     title: "Sonic the Hedgehog 3",
-    date: 2024,
-    duration: "110m",
-    image: "https://dx35vtwkllhj9.cloudfront.net/paramountpictures/sonic-the-hedgehog-3/images/regions/us/updates1/onesheet.jpg", // Replace with actual image URLs
-    tag: "CAM",
+    year: "2024",
+    runtime: "110m",
+    genre: "Action, Adventure, Comedy",
+    director: "Jeff Fowler",
+    actors: "Ben Schwartz, Idris Elba, Jim Carrey",
+    plot: "Sonic and his friends must stop Dr. Robotnik from taking over the world.",
+    poster: "https://dx35vtwkllhj9.cloudfront.net/paramountpictures/sonic-the-hedgehog-3/images/regions/us/updates1/onesheet.jpg",
   },
   {
     title: "Gladiator II",
-    date: 2024,
-    duration: "148m",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDW7KlflpfkA6h6yNVGer-0wdrygFb9R7BIQ&s",
-    tag: "HD",
+    year: "2024",
+    runtime: "148m",
+    genre: "Action, Drama, History",
+    director: "Ridley Scott",
+    actors: "Russell Crowe, Joaquin Phoenix, Connie Nielsen",
+    plot: "The story of a gladiator who seeks revenge for the death of his family.",
+    poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDW7KlflpfkA6h6yNVGer-0wdrygFb9R7BIQ&s",
   },
   {
     title: "Avatar 3",
-    date: 2025,
-    duration: "192m",
-    image: "https://via.placeholder.com/150",
-    tag: "HD",
+    year: "2025",
+    runtime: "192m",
+    genre: "Action, Adventure, Fantasy",
+    director: "James Cameron",
+    actors: "Sam Worthington, Zoe Saldana, Sigourney Weaver",
+    plot: "The continuation of the epic saga of the Na'vi people on Pandora.",
+    poster: "https://via.placeholder.com/150",
   },
   {
     title: "The Batman 2",
-    date: 2025,
-    duration: "150m",
-    image: "https://via.placeholder.com/150",
-    tag: "HD",
+    year: "2025",
+    runtime: "150m",
+    genre: "Action, Crime, Drama",
+    director: "Matt Reeves",
+    actors: "Robert Pattinson, Zoë Kravitz, Paul Dano",
+    plot: "Batman faces new challenges and villains in Gotham City.",
+    poster: "https://via.placeholder.com/150",
   },
   {
     title: "Gladiator II",
-    date: 2024,
-    duration: "148m",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDW7KlflpfkA6h6yNVGer-0wdrygFb9R7BIQ&s",
-    tag: "HD",
+    year: "2024",
+    runtime: "148m",
+    genre: "Action, Drama, History",
+    director: "Ridley Scott",
+    actors: "Russell Crowe, Joaquin Phoenix, Connie Nielsen",
+    plot: "The story of a gladiator who seeks revenge for the death of his family.",
+    poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDW7KlflpfkA6h6yNVGer-0wdrygFb9R7BIQ&s",
   },
   {
     title: "Gladiator II",
-    date: 2024,
-    duration: "148m",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDW7KlflpfkA6h6yNVGer-0wdrygFb9R7BIQ&s",
-    tag: "HD",
+    year: "2024",
+    runtime: "148m",
+    genre: "Action, Drama, History",
+    director: "Ridley Scott",
+    actors: "Russell Crowe, Joaquin Phoenix, Connie Nielsen",
+    plot: "The story of a gladiator who seeks revenge for the death of his family.",
+    poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDW7KlflpfkA6h6yNVGer-0wdrygFb9R7BIQ&s",
   },
   // Add more movie objects
 ];
 
-// Define the MovieCard component as a normal function
-function MovieCard(props: Movie) {
-  const { title, date, duration, image, tag } = props;
 
+const MovieCard = ({ title, year, runtime, genre, director, actors, plot, poster }:Movie) => {
   return (
     <Card sx={{ maxWidth: 200, boxShadow: 3 }}>
       <CardMedia
         component="img"
         height="300"
-        image={image}
+        image={poster}
         alt={title}
         sx={{ position: "relative" }}
       />
@@ -84,32 +103,31 @@ function MovieCard(props: Movie) {
           {title}
         </Typography>
         <Typography variant="body2" color="textSecondary">
-          {date} • {duration}
+          {year} • {runtime}
         </Typography>
-        {tag && (
-          <Chip
-            label={tag}
-            size="small"
-            sx={{
-              position: "absolute",
-              top: 8,
-              right: 8,
-              backgroundColor: "black",
-              color: "white",
-            }}
-          />
-        )}
+        <Typography variant="body2" color="textSecondary">
+          Genre: {genre}
+        </Typography>
+        <Typography variant="body2" color="textSecondary">
+          Director: {director}
+        </Typography>
+        <Typography variant="body2" color="textSecondary">
+          Actors: {actors}
+        </Typography>
+        <Typography variant="body2" color="textSecondary">
+          Plot: {plot}
+        </Typography>
       </CardContent>
     </Card>
   );
-}
+};
 
 // Define the MovieGrid component as a normal function
 function MovieGrid() {
   const [movies, setMovies] = useState<Movie[]>(moviesList);
 
   const sortByDate = () => {
-    const sorted = [...movies].sort((a, b) => b.date - a.date);
+    const sorted = [...movies].sort((a, b) => parseInt(b.year) - parseInt(a.year));
     setMovies(sorted);
   };
 
@@ -153,10 +171,13 @@ function MovieGrid() {
               <Grid item xs={6} sm={4} md={3} lg={3} key={index}>
                 <MovieCard
                   title={movie.title}
-                  date={movie.date}
-                  duration={movie.duration}
-                  image={movie.image}
-                  tag={movie.tag}
+                  year={movie.year}
+                  runtime={movie.runtime}
+                  genre={movie.genre}
+                  director={movie.director}
+                  actors={movie.actors}
+                  plot={movie.plot}
+                  poster={movie.poster}
                 />
               </Grid>
             );

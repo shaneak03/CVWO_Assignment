@@ -1,21 +1,45 @@
 import React, { useState } from "react";
 import { TextField, Button, Grid, Typography, Box, Alert } from "@mui/material";
-import { Link } from "react-router-dom"; 
+import { Link, useNavigate } from "react-router-dom"; 
+import supabase from "../supabase";
 
-const ENDPOINT = "http://localhost:3000";
-
-interface RegisterProps {
-  onRegisterSuccess: () => void; 
-}
-
-function Register({ onRegisterSuccess }: RegisterProps) {
+function Register() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
 
-  function handleRegister(event: React.FormEvent) {
+  const navigate = useNavigate()
+
+  const createUser = async (userData: { id: string; username: string; email: string }) => {
+    const res = await fetch(`${import.meta.env.VITE_SERVER_API_URL}/api/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.error || "Error creating user");
+    }
+  };
+
+  const onSignUp = async (formData: any) => {
+    let { data, error } = await supabase.auth.signUp({
+      email: formData.email,
+      password: formData.password,
+    });
+    if (error) throw new Error(error.message);
+    await createUser({
+      id: data.user?.id || "",
+      username: formData.username,
+      email: formData.email,
+    });
+  };
+
+  async function handleRegister(event: React.FormEvent) {
     event.preventDefault();
     setError(null);
 
@@ -24,26 +48,19 @@ function Register({ onRegisterSuccess }: RegisterProps) {
       return;
     }
 
-    try {
-      const response = fetch(`${ENDPOINT}/api/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, email, password }), 
-      });
+    const formData = {
+      username,
+      email,
+      password,
+    };
 
-      response.then((res) => {
-        if (res.ok) {
-          onRegisterSuccess();
-        } else {
-          res.text().then((errorText) => {
-            setError(errorText);
-          });
-        }
-      });
-    } catch (err) {
-      setError("An error occurred while registering. Please try again.");
+    try {
+      await onSignUp(formData);
+      console.log("Registration successful, navigating to homepage...");
+      navigate("/");
+    } catch (err: any) {
+      console.error("Error during registration:", err);
+      setError(err.message);
     }
   }
 

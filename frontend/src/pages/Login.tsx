@@ -1,42 +1,30 @@
 import React, { useState } from "react";
 import { TextField, Button, Grid, Typography, Box, Alert } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom"; 
+import { Link, useNavigate } from "react-router-dom";
+import supabase from "../supabase";
 
-const ENDPOINT = "http://localhost:3000";
 
-interface LoginProps {
-  onLoginSuccess: () => void; 
-}
 
-function Login({ onLoginSuccess }: LoginProps) {
-  const [username, setUsername] = useState("");
+
+function Login() {
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   async function handleLogin(event: React.FormEvent) {
     event.preventDefault();
     setError(null);
 
-    try {
-      const response = await fetch(`${ENDPOINT}/api/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, password }),
-        credentials: "include",
-      });
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-      if (response.ok) {
-        onLoginSuccess();
-        navigate("/");
-      } else {
-        const errorText = await response.text();
-        setError(errorText);
-      }
-    } catch (err) {
-      setError("An error occurred while logging in. Please try again.");
+    if (error) {
+      setError(error.message);
+    } else {
+      navigate("/");
     }
   }
 
@@ -66,12 +54,12 @@ function Login({ onLoginSuccess }: LoginProps) {
         {error && <Alert severity="error">{error}</Alert>}
 
         <TextField
-          label="Username"
+          label="Email"
           variant="outlined"
           fullWidth
           margin="normal"
-          value={username}
-          onChange={(event) => setUsername(event.target.value.trim())}
+          value={email}
+          onChange={(event) => setEmail(event.target.value.trim())}
         />
         <TextField
           label="Password"
@@ -95,7 +83,7 @@ function Login({ onLoginSuccess }: LoginProps) {
           <Button
             variant="text"
             color="primary"
-            component={Link} 
+            component={Link}
             to="/register"
             style={{ textDecoration: "none" }}
           >

@@ -15,7 +15,7 @@ func SetupRoutes(router *gin.Engine) {
 	router.Use(utils.JWTMiddleware())
 
 	// Authentication routes
-	router.POST("/api/signup", controllers.SignUp)
+	router.POST("/api/register", controllers.Register)
 	router.POST("/api/login", controllers.Login)
 	router.POST("/api/logout", controllers.Logout)
 

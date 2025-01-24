@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/shaneak03/CVWO_Assignment/backend/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -14,10 +15,10 @@ func ConnectToDb() {
 	var err error
 	dsn := os.Getenv("DB_URL")
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
-
 	if err != nil {
-		log.Fatal("Failed to connect to database")
-	} else {
-		log.Println("Database connection established")
+		log.Fatalf("Failed to connect to the database: %v", err)
 	}
+
+	// Migrate the schema
+	models.Migrate(DB)
 }
