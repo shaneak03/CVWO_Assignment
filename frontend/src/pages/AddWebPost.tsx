@@ -14,7 +14,6 @@ import {
   Checkbox,
   FormControlLabel,
 } from "@mui/material";
-import Navbar from "../components/Navbar";
 import { ENDPOINT } from "../App";
 
 function AddWebPost() {
@@ -76,7 +75,6 @@ function AddWebPost() {
 
   return (
     <>
-      <Navbar />
       <div>
         <Grid
           container

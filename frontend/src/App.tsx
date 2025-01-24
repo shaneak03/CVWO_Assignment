@@ -1,7 +1,6 @@
 import './App.css';
-import { Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import AddWebPost from './pages/AddWebPost';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -12,6 +11,7 @@ import SearchPage from './pages/SearchPage';
 import Profile from './pages/Profile';
 import MovieDetails from './pages/MovieDetails';
 import { UserProvider, useUser } from './hooks/User';
+import Navbar from './components/Navbar';
 
 export const ENDPOINT = "http://localhost:3000";
 
@@ -23,9 +23,10 @@ const API = (url: string) => fetch(`${ENDPOINT}/${url}`,  {
   credentials: 'include', 
 }).then((r) => r.json());
 
-function App() {
+function AppContent() {
   const [webposts, setWebposts] = useState([]);
   const { isLoggedIn, userId } = useUser();
+  const location = useLocation();
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -37,87 +38,93 @@ function App() {
     }
   }, [isLoggedIn]);
 
+  const hideNavbarRoutes = ["/login", "/register"];
+
+  return (
+    <>
+      {!hideNavbarRoutes.includes(location.pathname) && <Navbar />}
+      <Routes>
+        <Route
+          path="/"
+          element={isLoggedIn ? (
+            <>
+              <div>{JSON.stringify(webposts)}</div>
+              <Home />
+            </>
+          ) : (
+            <Navigate to="/login" />
+          )}
+        />
+        <Route
+          path="/addwebpost"
+          element={isLoggedIn ? (
+            <>
+              <div>{JSON.stringify(webposts)}</div>
+              <AddWebPost />
+            </>
+          ) : (
+            <Navigate to="/login" />
+          )}
+        />
+        <Route
+          path="/addreview"
+          element={isLoggedIn ? (
+            <>
+              <div>{JSON.stringify(webposts)}</div>
+              <AddReview />
+            </>
+          ) : (
+            <Navigate to="/login" />
+          )}
+        />
+        <Route
+          path="/searchpage"
+          element={isLoggedIn ? (
+            <>
+              <div>{JSON.stringify(webposts)}</div>
+              <SearchPage />
+            </>
+          ) : (
+            <Navigate to="/login" />
+          )}
+        />
+        <Route
+          path="/movies"
+          element={isLoggedIn ? (
+            <>
+              <div>{JSON.stringify(webposts)}</div>
+              <Movies />
+            </>
+          ) : (
+            <Navigate to="/login" />
+          )}
+        />
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+        <Route
+          path="/register"
+          element={<Register />}
+        />
+        <Route
+          path="/profile"
+          element={isLoggedIn ? <Profile /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/movie/:imdbID"
+          element={isLoggedIn ? <MovieDetails /> : <Navigate to="/login" />}
+        />
+      </Routes>
+    </>
+  );
+}
+
+function App() {
   return (
     <UserProvider>
       <Router>
-        <Box display="flex" justifyContent="center" marginTop="1rem">
-          <Link to="/login" style={{ marginRight: '1rem' }}>Login</Link>
-          <Link to="/register" style={{ marginRight: '1rem' }}>Register</Link>
-          {isLoggedIn && <Link to="/profile">Profile</Link>}
-        </Box>
-        <Routes>
-          <Route
-            path="/"
-            element={isLoggedIn ? (
-              <>
-                <Box>{JSON.stringify(webposts)}</Box>
-                <Home />
-              </>
-            ) : (
-              <Navigate to="/login" />
-            )}
-          />
-          <Route
-            path="/addwebpost"
-            element={isLoggedIn ? (
-              <>
-                <Box>{JSON.stringify(webposts)}</Box>
-                <AddWebPost />
-              </>
-            ) : (
-              <Navigate to="/login" />
-            )}
-          />
-          <Route
-            path="/addreview"
-            element={isLoggedIn ? (
-              <>
-                <Box>{JSON.stringify(webposts)}</Box>
-                <AddReview />
-              </>
-            ) : (
-              <Navigate to="/login" />
-            )}
-          />
-          <Route
-            path="/searchpage"
-            element={isLoggedIn ? (
-              <>
-                <Box>{JSON.stringify(webposts)}</Box>
-                <SearchPage />
-              </>
-            ) : (
-              <Navigate to="/login" />
-            )}
-          />
-          <Route
-            path="/movies"
-            element={isLoggedIn ? (
-              <>
-                <Box>{JSON.stringify(webposts)}</Box>
-                <Movies />
-              </>
-            ) : (
-              <Navigate to="/login" />
-            )}
-          />
-          <Route
-            path="/login"
-            element={<Login />}
-          />
-          <Route
-            path="/register"
-            element={<Register />}
-          />
-          <Route
-            path="/profile"
-            element={isLoggedIn ? <Profile /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/movie/:imdbID"
-            element={isLoggedIn ? <MovieDetails /> : <Navigate to="/login" />}
-          />
-        </Routes>
+        <AppContent />
       </Router>
     </UserProvider>
   );

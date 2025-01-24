@@ -12,14 +12,16 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../hooks/User';
+import supabase from '../supabase';
 
 const pages = ['Movies', 'Search', 'Add Post', 'Add Review'];
-const settings = ['Profile', 'Logout'];
 
 function Navbar() {
   const navigate = useNavigate();
 
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const { isLoggedIn, userId } = useUser();
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -39,11 +41,24 @@ function Navbar() {
     : navigate("/addreview");
   }
 
-  function handleSettingClick(page: string) {
-    page === "Profile"
+  function handleSettingClick(setting: string) {
+    setting === "Profile"
     ? navigate("/profile")
-    : navigate("/login");
+    : setting === "Logout"
+    ? handleLogout()
+    : setting === "Login"
+    ? navigate("/login")
+    : navigate("/register");
   }
+
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error('Error logging out:', error.message);
+    } else {
+      navigate("/login");
+    }
+  };
 
   function handleHomeClick() {
     navigate("/");
@@ -107,7 +122,7 @@ function Navbar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
+              {(isLoggedIn ? ['Profile', 'Logout'] : ['Login', 'Register']).map((setting) => (
                 <MenuItem key={setting} onClick={() => handleSettingClick(setting)}>
                   <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
                 </MenuItem>

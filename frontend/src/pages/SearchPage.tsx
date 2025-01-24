@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { TextField, Typography, Box } from "@mui/material";
-import Navbar from "../components/Navbar";
 import PostCard from "../components/PostCard";
 
 function SearchPage() {
@@ -45,7 +44,6 @@ function SearchPage() {
 
   return (
     <>
-      <Navbar />
       <Box sx={{ padding: "2rem" }}>
         <Typography variant="h3" sx={{ marginBottom: "2rem", textAlign: "center" }}>
           Search Posts

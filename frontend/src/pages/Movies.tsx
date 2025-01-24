@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography, Grid, Button } from "@mui/material";
-import Navbar from "../components/Navbar";
 import ReviewCard from "../components/ReviewCard";
 import PostCard from "../components/PostCard";
 import MovieCard from "../components/MovieCard";
@@ -54,7 +53,6 @@ function Movies() {
         minHeight: "100vh",
       }}
     >
-      <Navbar />
       <ReviewCard content={test} rating={7} spoiler={false} creator="me"/>
       <PostCard title="blah" content={test} tags={["none"]} spoiler={true} creator="me" votes={4}/>
       <Box>

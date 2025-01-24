@@ -9,7 +9,6 @@ import {
   Checkbox,
   FormControlLabel,
 } from "@mui/material";
-import Navbar from "../components/Navbar";
 import { ENDPOINT } from "../App";
 
 function AddReview() {
@@ -63,7 +62,6 @@ function AddReview() {
 
   return (
     <>
-      <Navbar />
       <div>
         <Grid
           container
