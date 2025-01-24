@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/shaneak03/CVWO_Assignment/backend/initialisers"
 	"github.com/shaneak03/CVWO_Assignment/backend/models"
-	"github.com/shaneak03/CVWO_Assignment/backend/utils"
 )
 
 // sign up user
@@ -18,7 +18,7 @@ func HandleUserSignUp(c *gin.Context) {
 
 	// Create user
 	user := models.User{ID: body.ID, Username: body.Username, Email: body.Email}
-	res := utils.DB.Create(&user)
+	res := initialisers.DB.Create(&user)
 
 	if res.Error != nil {
 		c.JSON(400, gin.H{
@@ -40,7 +40,7 @@ func GetUserDetails(c *gin.Context) {
 
 	// Create user
 	user := models.User{ID: userId}
-	res := utils.DB.First(&user)
+	res := initialisers.DB.First(&user)
 
 	if res.Error != nil {
 		c.JSON(400, gin.H{
@@ -68,7 +68,7 @@ func ChangeUserDetails(c *gin.Context) {
 
 	// Create user
 	user := models.User{ID: userId}
-	res := utils.DB.Model(&user)
+	res := initialisers.DB.Model(&user)
 
 	if body.ProfilePic == "" {
 		res = res.Updates(models.User{Username: body.Username, Email: body.Email})

@@ -9,7 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5"
-	"github.com/shaneak03/CVWO_Assignment/backend/utils"
+	"github.com/shaneak03/CVWO_Assignment/backend/initialisers"
 )
 
 var conn *pgx.Conn
@@ -115,7 +115,7 @@ func Login(c *gin.Context) {
 	// Debug: Print authenticated user ID
 	log.Println("Authenticated User ID:", userID)
 
-	token, err := utils.GenerateJWT(req.Username)
+	token, err := initialisers.GenerateJWT(req.Username)
 	if err != nil {
 		log.Println("Error generating token:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not generate token"})
