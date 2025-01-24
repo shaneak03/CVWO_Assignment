@@ -1,16 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TextField, Button, Grid, Typography, Box, Alert } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import supabase from "../supabase";
-
-
-
+import { useUser } from "../hooks/User";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { isLoggedIn } = useUser();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/");
+    }
+  }, [isLoggedIn, navigate]);
 
   async function handleLogin(event: React.FormEvent) {
     event.preventDefault();

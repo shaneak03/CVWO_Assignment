@@ -10,13 +10,13 @@ func SetupRoutes(router *gin.Engine) {
 	// Apply CORS middleware
 	router.Use(initialisers.SetupCORS())
 
-	// Apply JWT middleware to protect routes
-	router.Use(initialisers.JWTMiddleware())
-
-	// Authentication routes
+	// Authentication routes (no JWT middleware)
 	router.POST("/api/register", controllers.Register)
 	router.POST("/api/login", controllers.Login)
 	router.POST("/api/logout", controllers.Logout)
+
+	// Apply JWT middleware to protect routes
+	router.Use(initialisers.JWTMiddleware())
 
 	// WebPost routes
 	router.GET("/api/webposts", controllers.GetWebPosts)

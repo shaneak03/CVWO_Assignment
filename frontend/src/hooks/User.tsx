@@ -8,7 +8,7 @@ type UserState = {
 
 const UserContext = createContext<UserState>({
   isLoggedIn: false,
-  userId: "",
+  userId: null,
 });
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -23,7 +23,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     const checkUser = async () => {
       const { data, error } = await supabase.auth.getSession();
       if (error || !data.session?.user) {
-        setUserState({ isLoggedIn: false, userId: "" });
+        setUserState({ isLoggedIn: false, userId: null });
         console.error("No session found");
       } else {
         setUserState({ isLoggedIn: true, userId: data.session.user.id });
@@ -31,16 +31,18 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     };
     checkUser();
 
-    //Listen for log in / log out
-    const { data } = supabase.auth.onAuthStateChange((_, session) => {
+    // Listen for log in / log out
+    const { data: authListener } = supabase.auth.onAuthStateChange((_, session) => {
       if (session?.user) {
         setUserState({ isLoggedIn: true, userId: session.user.id });
       } else {
-        setUserState({ isLoggedIn: false, userId: "" });
+        setUserState({ isLoggedIn: false, userId: null });
       }
     });
 
-    return () => data.subscription.unsubscribe();
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
   }, []);
 
   return (
@@ -48,6 +50,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-export const User = () => {
+export const useUser = () => {
   return useContext(UserContext);
 };
