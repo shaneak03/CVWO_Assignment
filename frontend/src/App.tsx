@@ -33,25 +33,20 @@ function AppContent() {
   const { isLoggedIn, userId } = useUser();
   const location = useLocation();
 
+  const hideNavbarRoutes = ["/login", "/register"];
+
   useEffect(() => {
-    async function fetchWebPosts() {
+    async function fetchPosts() {
       try {
-        const response = await fetch(`${import.meta.env.VITE_SERVER_API_URL}/api/webposts`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch web posts");
-        }
+        const response = await fetch(`${ENDPOINT}/api/webposts`);
         const data = await response.json();
-        console.log("Fetched web posts:", data); // Log the fetched web posts
         setWebPosts(data);
       } catch (error) {
-        console.error("Error fetching web posts:", error);
+        console.error("Error fetching posts:", error);
       }
     }
-
-    fetchWebPosts();
+    fetchPosts();
   }, []);
-
-  const hideNavbarRoutes = ["/login", "/register"];
 
   return (
     <>

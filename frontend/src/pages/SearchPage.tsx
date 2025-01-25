@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TextField, Typography, Box } from "@mui/material";
 import PostCard from "../components/PostCard";
 
@@ -15,18 +15,37 @@ interface Post {
   votes: number;
 }
 
+interface PostWithUsername extends Post {
+  username: string;
+}
+
 interface SearchPageProps {
   posts: Post[];
 }
 
 function SearchPage({ posts }: SearchPageProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [postsWithUsernames, setPostsWithUsernames] = useState<PostWithUsername[]>([]);
+
+  useEffect(() => {
+    async function fetchUsernames() {
+      const postsWithUsernames = await Promise.all(
+        posts.map(async (post) => {
+          const userResponse = await fetch(`${ENDPOINT}/api/users/${post.user_id}`);
+          const userData = await userResponse.json();
+          return { ...post, username: userData.username };
+        })
+      );
+      setPostsWithUsernames(postsWithUsernames);
+    }
+    fetchUsernames();
+  }, [posts]);
 
   function handleSearchChange(event: React.ChangeEvent<HTMLInputElement>) {
     setSearchQuery(event.target.value.toLowerCase());
   }
 
-  const filteredPosts = posts.filter(
+  const filteredPosts = postsWithUsernames.filter(
     (post) =>
       post.title.toLowerCase().includes(searchQuery) ||
       post.content.toLowerCase().includes(searchQuery) ||
@@ -60,7 +79,7 @@ function SearchPage({ posts }: SearchPageProps) {
               content={post.content}
               tags={post.tags}
               spoiler={post.spoiler}
-              user_id={post.user_id}
+              username={post.username}
               votes={post.votes}
             />
           ))}

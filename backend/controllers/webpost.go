@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"net/http"
 	"net/url"
 
@@ -46,7 +47,7 @@ func CreateWebPost(c *gin.Context) {
 
 func GetWebPosts(c *gin.Context) {
 	var webPosts []models.WebPost
-	if err := initialisers.DB.Find(&webPosts).Error; err != nil {
+	if err := initialisers.DB.Where("deleted_at IS NULL").Find(&webPosts).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -62,25 +63,43 @@ func UpdateWebPost(c *gin.Context) {
 	}
 
 	var webPost models.WebPost
-	if err := initialisers.DB.First(&webPost, id).Error; err != nil {
+	if err := initialisers.DB.First(&webPost, "id = ?", id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Web post not found"})
 		return
 	}
 
 	webPost.Title = request.Title
 	webPost.Content = request.Content
-	webPost.UserID = request.UserID
 	webPost.Movie = request.Movie
 	webPost.Tags = request.Tags
 	webPost.Spoiler = request.Spoiler
 	webPost.Votes = request.Votes
 
 	if err := initialisers.DB.Save(&webPost).Error; err != nil {
+		log.Println("Error updating web post:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Web post updated successfully"})
+}
+
+func DeleteWebPost(c *gin.Context) {
+	id := c.Param("id")
+
+	var webPost models.WebPost
+	if err := initialisers.DB.First(&webPost, "id = ?", id).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Web post not found"})
+		return
+	}
+
+	if err := initialisers.DB.Delete(&webPost).Error; err != nil {
+		log.Println("Error deleting web post:", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Web post deleted successfully"})
 }
 
 func GetWebPostsByMovie(c *gin.Context) {
@@ -90,7 +109,17 @@ func GetWebPostsByMovie(c *gin.Context) {
 		return
 	}
 	var webPosts []models.WebPost
-	if err := initialisers.DB.Where("movie = ?", movieTitle).Find(&webPosts).Error; err != nil {
+	if err := initialisers.DB.Where("movie = ? AND deleted_at IS NULL", movieTitle).Find(&webPosts).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, webPosts)
+}
+
+func GetWebPostsByUser(c *gin.Context) {
+	userID := c.Param("userID")
+	var webPosts []models.WebPost
+	if err := initialisers.DB.Where("user_id = ? AND deleted_at IS NULL", userID).Find(&webPosts).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

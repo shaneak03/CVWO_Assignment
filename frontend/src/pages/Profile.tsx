@@ -9,7 +9,7 @@ interface Post {
   id: number;
   title: string;
   content: string;
-  created_at: string;
+  created_at: string; 
   tags: string[];
   spoiler: boolean;
   movie: string;
@@ -75,11 +75,13 @@ function Profile() {
       const { data: postsData, error: postsError } = await supabase
         .from("posts")
         .select("*")
-        .eq("user_id", user.id);
+        .eq("user_id", user.id)
+        .is("deleted_at", null); 
 
       if (postsError) {
         console.error("Error fetching posts:", postsError);
       } else {
+        console.log("Fetched Posts:", postsData); 
         setPosts(postsData);
       }
     }
@@ -92,7 +94,8 @@ function Profile() {
       const { data: reviewsData, error: reviewsError } = await supabase
         .from("reviews")
         .select("*")
-        .eq("user_id", user.id);
+        .eq("user_id", user.id)
+        .is("deleted_at", null); 
 
       if (reviewsError) {
         console.error("Error fetching reviews:", reviewsError);
@@ -180,71 +183,83 @@ function Profile() {
       <Typography variant="h5" gutterBottom>
         Posts
       </Typography>
-      <Grid container spacing={3}>
-        {posts.map((post) => (
-          <Grid item xs={12} sm={6} md={4} key={post.id}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">{post.title}</Typography>
-                <Typography variant="body2" color="textSecondary">
-                  {new Date(post.created_at).toLocaleDateString()}
-                </Typography>
-                <Typography variant="body1">{post.content}</Typography>
-                <Button
-                  variant="outlined"
-                  sx={{ marginTop: 2 }}
-                  onClick={() => navigate(`/edit-webpost`, { state: { postId: post.id, title: post.title, content: post.content, tags: post.tags, spoiler: post.spoiler, movie: post.movie } })}
-                >
-                  Edit
-                </Button>
-                <Button
-                  variant="outlined"
-                  color="error"
-                  sx={{ marginTop: 2, marginLeft: 1 }}
-                  onClick={() => deletePost(post.id)}
-                >
-                  Delete
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+      {posts.length === 0 ? (
+        <Typography variant="body1" sx={{ textAlign: "center" }}>
+          No posts found.
+        </Typography>
+      ) : (
+        <Grid container spacing={3}>
+          {posts.map((post) => (
+            <Grid item xs={12} sm={6} md={4} key={post.id}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h6">{post.title}</Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    {new Date(post.created_at).toLocaleDateString()} {/* Ensure the date is correctly parsed */}
+                  </Typography>
+                  <Typography variant="body1">{post.content}</Typography>
+                  <Button
+                    variant="outlined"
+                    sx={{ marginTop: 2 }}
+                    onClick={() => navigate(`/edit-webpost`, { state: { postId: post.id, title: post.title, content: post.content, tags: post.tags, spoiler: post.spoiler, movie: post.movie } })}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    sx={{ marginTop: 2, marginLeft: 1 }}
+                    onClick={() => deletePost(post.id)}
+                  >
+                    Delete
+                  </Button>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      )}
 
       <Typography variant="h5" gutterBottom sx={{ marginTop: 4 }}>
         Reviews
       </Typography>
-      <Grid container spacing={3}>
-        {reviews.map((review) => (
-          <Grid item xs={12} sm={6} md={4} key={review.id}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">{review.movie_title}</Typography>
-                <Typography variant="body2" color="textSecondary">
-                  {new Date(review.created_at).toLocaleDateString()}
-                </Typography>
-                <Typography variant="body1">Rating: {review.rating}</Typography>
-                <Typography variant="body1">{review.content}</Typography>
-                <Button
-                  variant="outlined"
-                  sx={{ marginTop: 2 }}
-                  onClick={() => navigate(`/edit-review`, { state: { reviewId: review.id, comment: review.content, rating: review.rating, spoiler: review.spoiler, movie_title: review.movie_title } })}
-                >
-                  Edit
-                </Button>
-                <Button
-                  variant="outlined"
-                  color="error"
-                  sx={{ marginTop: 2, marginLeft: 1 }}
-                  onClick={() => deleteReview(review.id)}
-                >
-                  Delete
-                </Button>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+      {reviews.length === 0 ? (
+        <Typography variant="body1" sx={{ textAlign: "center" }}>
+          No reviews found.
+        </Typography>
+      ) : (
+        <Grid container spacing={3}>
+          {reviews.map((review) => (
+            <Grid item xs={12} sm={6} md={4} key={review.id}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h6">{review.movie_title}</Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    {new Date(review.created_at).toLocaleDateString()}
+                  </Typography>
+                  <Typography variant="body1">Rating: {review.rating}</Typography>
+                  <Typography variant="body1">{review.content}</Typography>
+                  <Button
+                    variant="outlined"
+                    sx={{ marginTop: 2 }}
+                    onClick={() => navigate(`/edit-review`, { state: { reviewId: review.id, comment: review.content, rating: review.rating, spoiler: review.spoiler, movie_title: review.movie_title } })}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    sx={{ marginTop: 2, marginLeft: 1 }}
+                    onClick={() => deleteReview(review.id)}
+                  >
+                    Delete
+                  </Button>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      )}
     </Box>
   );
 }
