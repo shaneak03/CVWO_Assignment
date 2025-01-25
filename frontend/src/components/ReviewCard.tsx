@@ -16,12 +16,12 @@ function ReviewCard({
   content,
   rating,
   spoiler,
-  creator,
+  user_id,
 }: {
   content: string;
   rating: number;
   spoiler: boolean;
-  creator: string;
+  user_id: string;
 }) {
   const [showFullContent, setShowFullContent] = useState(false);
 
@@ -41,10 +41,10 @@ function ReviewCard({
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            {creator[0].toUpperCase()}
+            {user_id[0].toUpperCase()}
           </Avatar>
         }
-        title={creator}
+        title={user_id}
       />
 
       <CardContent>

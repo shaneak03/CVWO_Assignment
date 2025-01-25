@@ -24,6 +24,7 @@ function Movies() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [genreFilter, setGenreFilter] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,6 +45,8 @@ function Movies() {
         }
       } catch (error) {
         console.error("Error fetching movies:", error);
+      } finally {
+        setLoading(false);
       }
     }
     fetchMovies();
@@ -80,58 +83,66 @@ function Movies() {
 
   return (
       <Box sx={{ paddingTop: 2 }}>
-        <Typography variant="h4" gutterBottom>
-          Movie Gallery
-        </Typography>
-        <Box sx={{ display: "flex", gap: 2, marginBottom: 3 }}>
-          <Button variant="contained" onClick={sortByDate}>
-            Sort by Date
-          </Button>
-          <Button variant="contained" onClick={sortAlphabetically}>
-            Sort Alphabetically
-          </Button>
-          <FormControl variant="outlined" sx={{ minWidth: 200 }}>
-            <InputLabel>Filter by Genre</InputLabel>
-            <Select
-              value={genreFilter}
-              onChange={handleGenreFilterChange}
-              label="Filter by Genre"
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value="Action">Action</MenuItem>
-              <MenuItem value="Comedy">Comedy</MenuItem>
-              <MenuItem value="Drama">Drama</MenuItem>
-              <MenuItem value="Horror">Horror</MenuItem>
-              <MenuItem value="Romance">Romance</MenuItem>
-            </Select>
-          </FormControl>
-          <TextField
-            label="Search by Title"
-            variant="outlined"
-            value={searchQuery}
-            onChange={handleSearchQueryChange}
-            sx={{ minWidth: 200 }}
-          />
-        </Box>
-        <Grid container columnSpacing={3} rowSpacing={3} justifyContent={filteredMovies.length <= 4 ? "center" : "flex-start"}>
-          {filteredMovies.map((movie, index) => (
-            <Grid item xs={6} sm={4} md={3} lg={2} key={index}>
-              <MovieCard
-                title={movie.title}
-                year={movie.year}
-                runtime={movie.runtime}
-                genre={movie.genre}
-                director={movie.director}
-                actors={movie.actors}
-                plot={movie.plot}
-                poster={movie.poster}
-                onClick={() => handleCardClick(movie)}
+        {loading ? (
+          <Typography variant="h4" align="center">
+            Loading movies...
+          </Typography>
+        ) : (
+          <>
+            <Typography variant="h4" gutterBottom>
+              Movie Gallery
+            </Typography>
+            <Box sx={{ display: "flex", gap: 2, marginBottom: 3 }}>
+              <Button variant="contained" onClick={sortByDate}>
+                Sort by Date
+              </Button>
+              <Button variant="contained" onClick={sortAlphabetically}>
+                Sort Alphabetically
+              </Button>
+              <FormControl variant="outlined" sx={{ minWidth: 200 }}>
+                <InputLabel>Filter by Genre</InputLabel>
+                <Select
+                  value={genreFilter}
+                  onChange={handleGenreFilterChange}
+                  label="Filter by Genre"
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value="Action">Action</MenuItem>
+                  <MenuItem value="Comedy">Comedy</MenuItem>
+                  <MenuItem value="Drama">Drama</MenuItem>
+                  <MenuItem value="Horror">Horror</MenuItem>
+                  <MenuItem value="Romance">Romance</MenuItem>
+                </Select>
+              </FormControl>
+              <TextField
+                label="Search by Title"
+                variant="outlined"
+                value={searchQuery}
+                onChange={handleSearchQueryChange}
+                sx={{ minWidth: 200 }}
               />
+            </Box>
+            <Grid container columnSpacing={3} rowSpacing={3} justifyContent={filteredMovies.length <= 4 ? "center" : "flex-start"}>
+              {filteredMovies.map((movie, index) => (
+                <Grid item xs={6} sm={4} md={3} lg={2} key={index}>
+                  <MovieCard
+                    title={movie.title}
+                    year={movie.year}
+                    runtime={movie.runtime}
+                    genre={movie.genre}
+                    director={movie.director}
+                    actors={movie.actors}
+                    plot={movie.plot}
+                    poster={movie.poster}
+                    onClick={() => handleCardClick(movie)}
+                  />
+                </Grid>
+              ))}
             </Grid>
-          ))}
-        </Grid>
+          </>
+        )}
       </Box>
   );
 }

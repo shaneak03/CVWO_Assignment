@@ -16,7 +16,7 @@ import { useUser } from '../hooks/User';
 import supabase from '../supabase';
 import MenuIcon from '@mui/icons-material/Menu';
 
-const pages = ['Movies', 'Search', 'Add Post', 'Add Review'];
+const pages = ['Movies', 'Search'];
 
 function Navbar() {
   const navigate = useNavigate();
@@ -44,11 +44,7 @@ function Navbar() {
     handleCloseNavMenu();
     page === "Movies"
     ? navigate("/movies")
-    : page === ("Search")
-    ? navigate("/searchpage")
-    : page === ("Add Post")
-    ? navigate("/addwebpost")
-    : navigate("/addreview");
+    : navigate("/searchpage")
   }
 
   function handleSettingClick(setting: string) {

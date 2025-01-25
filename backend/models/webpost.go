@@ -13,6 +13,7 @@ type WebPost struct {
 	Movie   string         `json:"movie"`
 	Tags    pq.StringArray `json:"tags" gorm:"type:text[]"`
 	Spoiler bool           `json:"spoiler"`
+	Votes   int            `json:"votes"`
 }
 
 func (WebPost) TableName() string {

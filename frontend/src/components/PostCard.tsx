@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -15,24 +15,41 @@ import { red } from "@mui/material/colors";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
+const ENDPOINT = import.meta.env.VITE_SERVER_API_URL;
+
 function PostCard({
   title,
   content,
   tags,
   spoiler,
-  creator,
+  user_id,
   votes,
 }: {
   title: string;
   content: string;
   tags: string[];
   spoiler: boolean;
-  creator: string;
+  user_id: string;
   votes: number;
 }) {
   const [showFullContent, setShowFullContent] = useState(false);
   const [upvoted, setUpvoted] = useState(false);
   const [downvoted, setDownvoted] = useState(false);
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    async function fetchUsername() {
+      try {
+        const response = await fetch(`${ENDPOINT}/api/users/${user_id}`);
+        const data = await response.json();
+        setUsername(data.username);
+      } catch (error) {
+        console.error("Error fetching username:", error);
+      }
+    }
+    fetchUsername();
+  }, [user_id]);
+
   const netVotes = upvoted ? 1 : downvoted ? -1 : 0;
 
   function handleShowMore() {
@@ -69,10 +86,10 @@ function PostCard({
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            {creator[0].toUpperCase()}
+            {username[0]?.toUpperCase()}
           </Avatar>
         }
-        title={creator}
+        title={username}
       />
 
       <CardContent>
@@ -107,14 +124,14 @@ function PostCard({
       </CardContent>
 
       <CardActions sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-      <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <IconButton
             onClick={handleUpvote}
             color={upvoted ? "primary" : "default"}
           >
             <ArrowUpwardIcon />
           </IconButton>
-          <Typography variant="body2">{votes + netVotes}</Typography>
+          <Typography variant="body2">{Number(votes) + netVotes}</Typography>
           <IconButton
             onClick={handleDownvote}
             color={downvoted ? "error" : "default"}

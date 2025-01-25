@@ -2,34 +2,25 @@ import React, { useState } from "react";
 import { TextField, Typography, Box } from "@mui/material";
 import PostCard from "../components/PostCard";
 
-function SearchPage() {
+const ENDPOINT = import.meta.env.VITE_SERVER_API_URL;
+
+interface Post {
+  id: number;
+  title: string;
+  content: string;
+  user_id: string;
+  movie: string;
+  tags: string[];
+  spoiler: boolean;
+  votes: number;
+}
+
+interface SearchPageProps {
+  posts: Post[];
+}
+
+function SearchPage({ posts }: SearchPageProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [posts] = useState([
-    {
-      title: "Introduction to React",
-      content: "React is a JavaScript library for building user interfaces...",
-      tags: ["React", "JavaScript", "Frontend"],
-      spoiler: false,
-      creator: "John Doe",
-      votes: 5,
-    },
-    {
-      title: "Advanced CSS Techniques",
-      content: "CSS is used to style web pages and create responsive designs...",
-      tags: ["CSS", "Web Design", "Frontend"],
-      spoiler: false,
-      creator: "Jane Smith",
-      votes: 5,
-    },
-    {
-      title: "Understanding TypeScript",
-      content: "TypeScript extends JavaScript by adding types...",
-      tags: ["TypeScript", "JavaScript", "Programming"],
-      spoiler: false,
-      creator: "Alice Johnson",
-      votes: 5,
-    },
-  ]);
 
   function handleSearchChange(event: React.ChangeEvent<HTMLInputElement>) {
     setSearchQuery(event.target.value.toLowerCase());
@@ -69,7 +60,7 @@ function SearchPage() {
               content={post.content}
               tags={post.tags}
               spoiler={post.spoiler}
-              creator={post.creator}
+              user_id={post.user_id}
               votes={post.votes}
             />
           ))}

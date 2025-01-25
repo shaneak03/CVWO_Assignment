@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Typography, Card, CardMedia, CardContent, Container, Grid, Button } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
+import PostCard from "../components/PostCard";
+import ReviewCard from "../components/ReviewCard";
+
+const ENDPOINT = import.meta.env.VITE_SERVER_API_URL;
 
 interface Movie {
   title: string;
@@ -13,10 +17,49 @@ interface Movie {
   poster: string;
 }
 
+interface Post {
+  id: number;
+  title: string;
+  content: string;
+  user_id: string;
+  movie: string;
+  tags: string[];
+  spoiler: boolean;
+  votes: number;
+}
+
+interface Review {
+  id: number;
+  content: string;
+  user_id: string;
+  movie: string;
+  spoiler: boolean;
+  rating: number;
+}
+
 const MovieDetails = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const movie = location.state.movie as Movie;
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
+
+  useEffect(() => {
+    async function fetchPostsAndReviews() {
+      try {
+        const postsResponse = await fetch(`${ENDPOINT}/api/webposts?movie=${movie.title}`);
+        const postsData = await postsResponse.json();
+        setPosts(postsData);
+
+        const reviewsResponse = await fetch(`${ENDPOINT}/api/reviews?movie=${movie.title}`);
+        const reviewsData = await reviewsResponse.json();
+        setReviews(reviewsData);
+      } catch (error) {
+        console.error("Error fetching posts and reviews:", error);
+      }
+    }
+    fetchPostsAndReviews();
+  }, [movie.title]);
 
   const handleAddPost = () => {
     navigate("/addwebpost", { state: { movieTitle: movie.title } });
@@ -27,7 +70,7 @@ const MovieDetails = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ padding: 3 }}>
+    <Container sx={{ padding: 3 }} >
       <Card sx={{ boxShadow: 3 }}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={4}>
@@ -71,6 +114,34 @@ const MovieDetails = () => {
           </Grid>
         </Grid>
       </Card>
+      <Box sx={{ marginTop: 4, width: "100%" }}>
+        <Typography variant="h5" gutterBottom>
+          Posts
+        </Typography>
+        {posts.map((post) => (
+          <PostCard
+            key={post.id}
+            title={post.title}
+            content={post.content}
+            tags={post.tags}
+            spoiler={post.spoiler}
+            user_id={post.user_id}
+            votes={post.votes}
+          />
+        ))}
+        <Typography variant="h5" gutterBottom sx={{ marginTop: 4 }}>
+          Reviews
+        </Typography>
+        {reviews.map((review) => (
+          <ReviewCard
+            key={review.id}
+            content={review.content}
+            spoiler={review.spoiler}
+            user_id={review.user_id}
+            rating={review.rating}
+          />
+        ))}
+      </Box>
     </Container>
   );
 };

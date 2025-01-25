@@ -15,6 +15,7 @@ type WebPostRequest struct {
 	Movie   string   `json:"movie"`
 	Tags    []string `json:"tags"`
 	Spoiler bool     `json:"spoiler"`
+	Votes   int      `json:"votes"`
 }
 
 func CreateWebPost(c *gin.Context) {
@@ -31,6 +32,7 @@ func CreateWebPost(c *gin.Context) {
 		Movie:   request.Movie,
 		Tags:    request.Tags,
 		Spoiler: request.Spoiler,
+		Votes:   request.Votes,
 	}
 
 	if err := initialisers.DB.Create(&webPost).Error; err != nil {
@@ -70,6 +72,7 @@ func UpdateWebPost(c *gin.Context) {
 	webPost.Movie = request.Movie
 	webPost.Tags = request.Tags
 	webPost.Spoiler = request.Spoiler
+	webPost.Votes = request.Votes
 
 	if err := initialisers.DB.Save(&webPost).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

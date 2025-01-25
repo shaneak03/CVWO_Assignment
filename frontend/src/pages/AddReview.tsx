@@ -19,6 +19,7 @@ function AddReview() {
   const [content, setContent] = useState("");
   const [spoiler, setSpoiler] = useState(false);
   const [rating, setRating] = useState<number>(5);
+  const [error, setError] = useState<string | null>(null);
   const { userId } = useUser();
   const movieTitle = location.state?.movieTitle || "";
   const navigate = useNavigate();
@@ -52,8 +53,12 @@ function AddReview() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(review),
-        credentials: "include",
       });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to submit review");
+      }
 
       const data = await response.json();
       console.log(data);
@@ -61,8 +66,13 @@ function AddReview() {
       setContent("");
       setSpoiler(false);
       setRating(5);
+      setError(null);
+
+      // Alert user and redirect to home
+      alert("Review submitted successfully!");
+      navigate("/");
     } catch (error) {
-      console.error("Error posting review:", error);
+      console.error("Failed to submit review:", error);
     }
   }
 
@@ -88,6 +98,11 @@ function AddReview() {
         <Typography variant="h4" align="center" gutterBottom>
           Add Review
         </Typography>
+        {error && (
+          <Typography variant="body1" color="error" align="center" gutterBottom>
+            {error}
+          </Typography>
+        )}
         <TextField
           label="Review"
           variant="outlined"

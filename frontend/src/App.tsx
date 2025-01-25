@@ -23,7 +23,7 @@ interface WebPost {
   movie: string;
   tags: string[];
   spoiler: boolean;
-  created_at: string;
+  votes: number;
 }
 
 function AppContent() {
@@ -58,7 +58,16 @@ function AppContent() {
         <Route path="/" element={<Home />} />
         <Route path="/addwebpost" element={isLoggedIn ? <AddWebPost /> : <Navigate to="/login" />} />
         <Route path="/addreview" element={isLoggedIn ? <AddReview /> : <Navigate to="/login" />} />
-        <Route path="/searchpage" element={<SearchPage />} />
+        <Route path="/searchpage" element={<SearchPage posts={webPosts.map(post => ({
+          id: post.id,
+          title: post.title,
+          content: post.content,
+          user_id: post.user_id,
+          movie: post.movie,
+          tags: post.tags,
+          spoiler: post.spoiler,
+          votes: post.votes,
+        }))} />} />
         <Route path="/movies" element={<Movies />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
