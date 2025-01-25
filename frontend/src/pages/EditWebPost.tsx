@@ -27,7 +27,7 @@ function EditWebPost() {
   const [isSpoiler, setIsSpoiler] = useState(spoiler || false);
   const [postTags, setPostTags] = useState<string[]>(tags || []);
   const [error, setError] = useState<string | null>(null);
-  const [movieTitle, setMovieTitle] = useState(movie || "");
+  const [movieTitle] = useState(movie || "");
   const navigate = useNavigate();
 
   function handleTitle(event: React.ChangeEvent<HTMLInputElement>) {

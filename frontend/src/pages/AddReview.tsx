@@ -13,7 +13,6 @@ import { ENDPOINT } from "../App";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useUser } from '../hooks/User';
 
-
 function AddReview() {
   const location = useLocation();
   const [content, setContent] = useState("");
@@ -32,8 +31,9 @@ function AddReview() {
     setSpoiler(event.target.checked);
   }
 
-  function handleRatingChange(event: React.ChangeEvent<{}>, value: number | null) {
-    setRating(value ?? 5);
+  function handleRatingChange(event: React.ChangeEvent<{}>) {
+    const value = (event.target as HTMLInputElement).value;
+    setRating(Number(value));
   }
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {

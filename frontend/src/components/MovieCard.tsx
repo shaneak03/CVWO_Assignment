@@ -3,9 +3,6 @@ import {
   CardMedia,
   CardContent,
   Typography,
-  Box,
-  Grid,
-  Button,
 } from "@mui/material";
 
 // Define the interface for movies
@@ -21,7 +18,7 @@ interface Movie {
   onClick?: () => void; // Add onClick prop
 }
 
-const MovieCard = ({ title, year, runtime, genre, director, actors, plot, poster, onClick }: Movie) => {
+const MovieCard = ({ title, year, runtime, genre, poster, onClick }: Movie) => {
   return (
     <div onClick={onClick}>
       <Card sx={{ maxWidth: 200, boxShadow: 3 }}>

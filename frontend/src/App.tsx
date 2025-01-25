@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation, Navigate } from 'react-router-dom';
 import AddWebPost from './pages/AddWebPost';
 import Login from './pages/Login';
@@ -32,7 +32,7 @@ interface WebPost {
 
 function AppContent() {
   const [webPosts, setWebPosts] = useState<WebPost[]>([]);
-  const { isLoggedIn, userId } = useUser();
+  const { isLoggedIn  } = useUser();
   const location = useLocation();
 
   const hideNavbarRoutes = ["/login", "/register"];

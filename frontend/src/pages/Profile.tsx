@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Typography, Grid, Card, CardContent, Avatar, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import supabase from "../supabase";
@@ -68,7 +68,7 @@ function Profile() {
     }
 
     async function fetchPosts() {
-      const { data, error } = await supabase.auth.getUser();
+      const { data } = await supabase.auth.getUser();
       const user = data.user;
       if (!user) return;
 
@@ -87,7 +87,7 @@ function Profile() {
     }
 
     async function fetchReviews() {
-      const { data, error } = await supabase.auth.getUser();
+      const { data } = await supabase.auth.getUser();
       const user = data.user;
       if (!user) return;
 

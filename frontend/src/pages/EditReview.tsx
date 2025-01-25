@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   TextField,
   Button,
@@ -21,7 +21,7 @@ function EditReview() {
   const [currentRating, setCurrentRating] = useState<number>(rating || 5);
   const [error, setError] = useState<string | null>(null);
   const { userId } = useUser();
-  const [movieTitle, setMovieTitle] = useState(movie_title || "");
+  const [movieTitle] = useState(movie_title || "");
   const navigate = useNavigate();
 
   function handleContent(event: React.ChangeEvent<HTMLInputElement>) {
@@ -32,8 +32,9 @@ function EditReview() {
     setIsSpoiler(event.target.checked);
   }
 
-  function handleRatingChange(event: React.ChangeEvent<{}>, value: number | null) {
-    setCurrentRating(value ?? 5);
+  function handleRatingChange(event: React.ChangeEvent<{}>) {
+    const value = (event.target as HTMLInputElement).value;
+    setCurrentRating(Number(value));
   }
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
