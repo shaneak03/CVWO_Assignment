@@ -10,22 +10,19 @@ func SetupRoutes(router *gin.Engine) {
 	// Apply CORS middleware
 	router.Use(initialisers.SetupCORS())
 
-	// Authentication routes (no JWT middleware)
-	router.POST("/api/register", controllers.Register)
-	router.POST("/api/login", controllers.Login)
-	router.POST("/api/logout", controllers.Logout)
+	// Authentication routes (with JWT middleware)
+	router.POST("/api/register", initialisers.JWTMiddleware(), controllers.Register)
+	router.POST("/api/login", initialisers.JWTMiddleware(), controllers.Login)
+	router.POST("/api/logout", initialisers.JWTMiddleware(), controllers.Logout)
 
-	// Apply JWT middleware to protect routes
-	router.Use(initialisers.JWTMiddleware())
-
-	// WebPost routes
+	// WebPost routes (no JWT middleware)
 	router.GET("/api/webposts", controllers.GetWebPosts)
 	router.POST("/api/webposts", controllers.CreateWebPost)
 	router.PATCH("/api/webposts/:id", controllers.UpdateWebPost)
 
-	// Movie details route
+	// Movie details route (no JWT middleware)
 	router.GET("/api/movies/:id", controllers.GetMovieDetails)
 
-	// User details route
+	// User details route (no JWT middleware)
 	router.GET("/api/users/:id", controllers.GetUserDetails)
 }
