@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Grid, Card, CardContent, Avatar } from "@mui/material";
+import { Box, Typography, Grid, Card, CardContent, Avatar, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import supabase from "../supabase";
 
 const ENDPOINT = import.meta.env.VITE_SERVER_API_URL;
@@ -9,14 +10,18 @@ interface Post {
   title: string;
   content: string;
   created_at: string;
+  tags: string[];
+  spoiler: boolean;
+  movie: string;
 }
 
 interface Review {
   id: number;
   movie_title: string;
   rating: number;
-  comment: string;
+  content: string;
   created_at: string;
+  spoiler: boolean; 
 }
 
 interface UserProfile {
@@ -28,6 +33,7 @@ function Profile() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchUserProfile() {
@@ -100,6 +106,62 @@ function Profile() {
     fetchReviews();
   }, []);
 
+  async function deletePost(postId: number) {
+    if (!window.confirm("Are you sure you want to delete this post?")) {
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase.auth.getSession();
+      if (error || !data.session) {
+        throw new Error("Failed to get session");
+      }
+
+      const response = await fetch(`${ENDPOINT}/api/webposts/${postId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${data.session.access_token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete post");
+      }
+
+      setPosts(posts.filter(post => post.id !== postId));
+    } catch (error) {
+      console.error("Error deleting post:", error);
+    }
+  }
+
+  async function deleteReview(reviewId: number) {
+    if (!window.confirm("Are you sure you want to delete this review?")) {
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase.auth.getSession();
+      if (error || !data.session) {
+        throw new Error("Failed to get session");
+      }
+
+      const response = await fetch(`${ENDPOINT}/api/reviews/${reviewId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${data.session.access_token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete review");
+      }
+
+      setReviews(reviews.filter(review => review.id !== reviewId));
+    } catch (error) {
+      console.error("Error deleting review:", error);
+    }
+  }
+
   return (
     <Box sx={{ padding: 3 }}>
       {userProfile && (
@@ -128,6 +190,21 @@ function Profile() {
                   {new Date(post.created_at).toLocaleDateString()}
                 </Typography>
                 <Typography variant="body1">{post.content}</Typography>
+                <Button
+                  variant="outlined"
+                  sx={{ marginTop: 2 }}
+                  onClick={() => navigate(`/edit-webpost`, { state: { postId: post.id, title: post.title, content: post.content, tags: post.tags, spoiler: post.spoiler, movie: post.movie } })}
+                >
+                  Edit
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="error"
+                  sx={{ marginTop: 2, marginLeft: 1 }}
+                  onClick={() => deletePost(post.id)}
+                >
+                  Delete
+                </Button>
               </CardContent>
             </Card>
           </Grid>
@@ -147,7 +224,22 @@ function Profile() {
                   {new Date(review.created_at).toLocaleDateString()}
                 </Typography>
                 <Typography variant="body1">Rating: {review.rating}</Typography>
-                <Typography variant="body1">{review.comment}</Typography>
+                <Typography variant="body1">{review.content}</Typography>
+                <Button
+                  variant="outlined"
+                  sx={{ marginTop: 2 }}
+                  onClick={() => navigate(`/edit-review`, { state: { reviewId: review.id, comment: review.content, rating: review.rating, spoiler: review.spoiler, movie_title: review.movie_title } })}
+                >
+                  Edit
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="error"
+                  sx={{ marginTop: 2, marginLeft: 1 }}
+                  onClick={() => deleteReview(review.id)}
+                >
+                  Delete
+                </Button>
               </CardContent>
             </Card>
           </Grid>

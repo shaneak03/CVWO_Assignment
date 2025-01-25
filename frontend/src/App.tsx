@@ -10,6 +10,8 @@ import Movies from './pages/Movies';
 import SearchPage from './pages/SearchPage';
 import Profile from './pages/Profile';
 import MovieDetails from './pages/MovieDetails';
+import EditWebPost from './pages/EditWebPost';
+import EditReview from './pages/EditReview';
 import { UserProvider, useUser } from './hooks/User';
 import Navbar from './components/Navbar';
 
@@ -74,6 +76,8 @@ function AppContent() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/movie/:imdbID" element={<MovieDetails />} />
         <Route path="/movie/:id" element={<MovieDetails />} />
+        <Route path="/edit-webpost" element={<EditWebPost />} />
+        <Route path="/edit-review" element={<EditReview />} />
       </Routes>
     </>
   );

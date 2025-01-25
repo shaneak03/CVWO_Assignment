@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"net/url"
 
 	"github.com/gin-gonic/gin"
 	"github.com/shaneak03/CVWO_Assignment/backend/models"
@@ -80,4 +81,18 @@ func UpdateWebPost(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Web post updated successfully"})
+}
+
+func GetWebPostsByMovie(c *gin.Context) {
+	movieTitle, err := url.QueryUnescape(c.Param("movieTitle"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid movie title"})
+		return
+	}
+	var webPosts []models.WebPost
+	if err := initialisers.DB.Where("movie = ?", movieTitle).Find(&webPosts).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, webPosts)
 }

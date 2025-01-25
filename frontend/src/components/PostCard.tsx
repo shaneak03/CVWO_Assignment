@@ -15,40 +15,24 @@ import { red } from "@mui/material/colors";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
-const ENDPOINT = import.meta.env.VITE_SERVER_API_URL;
-
 function PostCard({
   title,
   content,
   tags,
   spoiler,
-  user_id,
+  username,
   votes,
 }: {
   title: string;
   content: string;
   tags: string[];
   spoiler: boolean;
-  user_id: string;
+  username: string;
   votes: number;
 }) {
   const [showFullContent, setShowFullContent] = useState(false);
   const [upvoted, setUpvoted] = useState(false);
   const [downvoted, setDownvoted] = useState(false);
-  const [username, setUsername] = useState("");
-
-  useEffect(() => {
-    async function fetchUsername() {
-      try {
-        const response = await fetch(`${ENDPOINT}/api/users/${user_id}`);
-        const data = await response.json();
-        setUsername(data.username);
-      } catch (error) {
-        console.error("Error fetching username:", error);
-      }
-    }
-    fetchUsername();
-  }, [user_id]);
 
   const netVotes = upvoted ? 1 : downvoted ? -1 : 0;
 
@@ -86,7 +70,7 @@ function PostCard({
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            {username[0]?.toUpperCase()}
+            {username ? username[0]?.toUpperCase() : ""}
           </Avatar>
         }
         title={username}
