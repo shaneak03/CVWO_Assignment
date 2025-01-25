@@ -7,6 +7,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
+	"github.com/shaneak03/CVWO_Assignment/backend/models"
 	"github.com/shaneak03/CVWO_Assignment/backend/routes"
 	initialisers "github.com/shaneak03/CVWO_Assignment/backend/utils"
 )
@@ -15,10 +16,12 @@ func init() {
 	// Load environment variables
 	initialisers.LoadEnvVariables()
 	initialisers.ConnectToDb()
+
+	// Run migrations
+	initialisers.DB.AutoMigrate(&models.Movie{})
 }
 
 func main() {
-
 	r := gin.Default()
 
 	//middleware

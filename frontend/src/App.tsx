@@ -64,6 +64,7 @@ function AppContent() {
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/movie/:imdbID" element={<MovieDetails />} />
+        <Route path="/movie/:id" element={<MovieDetails />} />
       </Routes>
     </>
   );

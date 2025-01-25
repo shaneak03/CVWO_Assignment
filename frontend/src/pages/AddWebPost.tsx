@@ -14,12 +14,14 @@ import {
   Checkbox,
   FormControlLabel,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import supabase from "../supabase";
 
 const ENDPOINT = import.meta.env.VITE_SERVER_API_URL;
 
 function AddWebPost() {
+  const location = useLocation();
+  const movieTitle = location.state?.movieTitle || "";
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [spoiler, setSpoiler] = useState(false);
@@ -57,7 +59,7 @@ function AddWebPost() {
       title,
       content,
       user_id: data.session.user.id,
-      movie: "Some Movie", // Replace with actual movie data 
+      movie: movieTitle, // Use movie title from state
       tags,
       spoiler,
     };
@@ -181,6 +183,13 @@ function AddWebPost() {
                 <MenuItem value="Superhero">Superhero</MenuItem>
               </Select>
             </FormControl>
+            <TextField
+              label="Movie"
+              value={movieTitle}
+              fullWidth
+              margin="normal"
+              disabled
+            />
             <Box marginY={2}>
               <FormControlLabel
                 control={

@@ -21,7 +21,7 @@ func SetupRoutes(router *gin.Engine) {
 	router.PATCH("/api/webposts/:id", controllers.UpdateWebPost)
 
 	// Movie details route (no JWT middleware)
-	router.GET("/api/movies/:id", controllers.GetMovieDetails)
+	router.GET("/api/movies", controllers.GetMovies)
 
 	// User details route (no JWT middleware)
 	router.GET("/api/users/:id", controllers.GetUserDetails)

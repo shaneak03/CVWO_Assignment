@@ -7,6 +7,9 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/shaneak03/CVWO_Assignment/backend/models"
+	initialisers "github.com/shaneak03/CVWO_Assignment/backend/utils"
+	"gorm.io/gorm/clause"
 )
 
 const OMDB_API_URL = "http://www.omdbapi.com/"
@@ -43,31 +46,61 @@ type MovieDetails struct {
 }
 
 func GetMovieDetails(c *gin.Context) {
-	imdbID := c.Param("imdbID")
-	apiKey := os.Getenv("OMDB_API_KEY")
-
-	url := fmt.Sprintf("%s?i=%s&apikey=%s", OMDB_API_URL, imdbID, apiKey)
-	resp, err := http.Get(url)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch movie details"})
-		return
-	}
-	defer resp.Body.Close()
-
-	var movieDetails MovieDetails
-	if err := json.NewDecoder(resp.Body).Decode(&movieDetails); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to decode movie details"})
+	var movies []models.Movie
+	if err := initialisers.DB.Find(&movies).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, movieDetails)
+	c.JSON(http.StatusOK, movies)
 }
 
 func GetMovies(c *gin.Context) {
-	imdbIDs := []string{"tt1234567", "tt7654321"} // Replace with actual IMDb IDs
+	imdbIDs := []string{
+		"tt0371746",
+		"tt0800080",
+		"tt1228705",
+		"tt0800369",
+		"tt0458339",
+		"tt0848228",
+		"tt1300854",
+		"tt1981115",
+		"tt1843866",
+		"tt2015381",
+		"tt2395427",
+		"tt0478970",
+		"tt3498820",
+		"tt1211837",
+		"tt3896198",
+		"tt2250912",
+		"tt3501632",
+		"tt1825683",
+		"tt4154756",
+		"tt5095030",
+		"tt4154664",
+		"tt4154796",
+		"tt6320628",
+		"tt6791350",
+		"tt3480822",
+		"tt9376612",
+		"tt9114286",
+		"tt9419884",
+		"tt9032400",
+		"tt10648342",
+		"tt10872600",
+		"tt10954600",
+		"tt10676048",
+		"tt10676052",
+		"tt10671440",
+		"tt20969586",
+		"tt14513804",
+		"tt6263850",
+		"tt21357150",
+		"tt21361444",
+		"tt29347085"}
+
 	apiKey := os.Getenv("OMDB_API_KEY")
 
-	var movies []MovieDetails
 	for _, imdbID := range imdbIDs {
 		url := fmt.Sprintf("%s?i=%s&apikey=%s", OMDB_API_URL, imdbID, apiKey)
 		resp, err := http.Get(url)
@@ -83,7 +116,36 @@ func GetMovies(c *gin.Context) {
 			return
 		}
 
-		movies = append(movies, movieDetails)
+		if movieDetails.Title == "" {
+			continue // Skip movies with an empty title
+		}
+
+		movie := models.Movie{
+			Title:    movieDetails.Title,
+			Year:     movieDetails.Year,
+			Runtime:  movieDetails.Runtime,
+			Genre:    movieDetails.Genre,
+			Director: movieDetails.Director,
+			Actors:   movieDetails.Actors,
+			Plot:     movieDetails.Plot,
+			Poster:   movieDetails.Poster,
+		}
+
+		// Upsert movie into the database
+		if err := initialisers.DB.Clauses(clause.OnConflict{
+			Columns:   []clause.Column{{Name: "title"}},
+			DoUpdates: clause.AssignmentColumns([]string{"year", "runtime", "genre", "director", "actors", "plot", "poster"}),
+		}).Create(&movie).Error; err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to upsert movie"})
+			return
+		}
+	}
+
+	// Retrieve movies from the database
+	var movies []models.Movie
+	if err := initialisers.DB.Find(&movies).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
 	c.JSON(http.StatusOK, movies)
