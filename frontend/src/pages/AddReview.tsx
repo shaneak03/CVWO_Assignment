@@ -10,11 +10,18 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import { ENDPOINT } from "../App";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useUser } from '../hooks/User';
+
 
 function AddReview() {
+  const location = useLocation();
   const [content, setContent] = useState("");
   const [spoiler, setSpoiler] = useState(false);
   const [rating, setRating] = useState<number>(5);
+  const { userId } = useUser();
+  const movieTitle = location.state?.movieTitle || "";
+  const navigate = useNavigate();
 
   function handleContent(event: React.ChangeEvent<HTMLInputElement>) {
     setContent(event.target.value);
@@ -30,13 +37,12 @@ function AddReview() {
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
     const review = {
-      author: "me",
+      movie: movieTitle,
       content,
       spoiler,
       rating,
-      date: new Date(),
+      user_id: userId
     };
 
     try {

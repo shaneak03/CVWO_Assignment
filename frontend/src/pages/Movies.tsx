@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Grid, Button } from "@mui/material";
+import { Box, Typography, Grid, Button, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ReviewCard from "../components/ReviewCard";
 import PostCard from "../components/PostCard";
@@ -22,6 +22,8 @@ const test = "Lorem ipsum odor amet, consectetuer adipiscing elit. Potenti elit 
 
 function Movies() {
   const [movies, setMovies] = useState<Movie[]>([]);
+  const [genreFilter, setGenreFilter] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -63,20 +65,21 @@ function Movies() {
     navigate(`/movie/${movie.title}`, { state: { movie } });
   };
 
+  const handleGenreFilterChange = (event: SelectChangeEvent) => {
+    setGenreFilter(event.target.value as string);
+  };
+
+  const handleSearchQueryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const filteredMovies = movies.filter((movie) =>
+    movie.genre.toLowerCase().includes(genreFilter.toLowerCase()) &&
+    movie.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <Box
-      sx={{
-        padding: 3,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "100vh",
-      }}
-    >
-      <ReviewCard content={test} rating={7} spoiler={false} creator="me"/>
-      <PostCard title="blah" content={test} tags={["none"]} spoiler={true} creator="me" votes={4}/>
-      <Box>
+      <Box sx={{ paddingTop: 2 }}>
         <Typography variant="h4" gutterBottom>
           Movie Gallery
         </Typography>
@@ -87,9 +90,33 @@ function Movies() {
           <Button variant="contained" onClick={sortAlphabetically}>
             Sort Alphabetically
           </Button>
+          <FormControl variant="outlined" sx={{ minWidth: 200 }}>
+            <InputLabel>Filter by Genre</InputLabel>
+            <Select
+              value={genreFilter}
+              onChange={handleGenreFilterChange}
+              label="Filter by Genre"
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value="Action">Action</MenuItem>
+              <MenuItem value="Comedy">Comedy</MenuItem>
+              <MenuItem value="Drama">Drama</MenuItem>
+              <MenuItem value="Horror">Horror</MenuItem>
+              <MenuItem value="Romance">Romance</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField
+            label="Search by Title"
+            variant="outlined"
+            value={searchQuery}
+            onChange={handleSearchQueryChange}
+            sx={{ minWidth: 200 }}
+          />
         </Box>
-        <Grid container columnSpacing={3} rowSpacing={3}>
-          {movies.map((movie, index) => (
+        <Grid container columnSpacing={3} rowSpacing={3} justifyContent={filteredMovies.length <= 4 ? "center" : "flex-start"}>
+          {filteredMovies.map((movie, index) => (
             <Grid item xs={6} sm={4} md={3} lg={2} key={index}>
               <MovieCard
                 title={movie.title}
@@ -106,7 +133,6 @@ function Movies() {
           ))}
         </Grid>
       </Box>
-    </Box>
   );
 }
 

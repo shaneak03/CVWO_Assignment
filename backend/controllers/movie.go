@@ -56,6 +56,8 @@ func GetMovieDetails(c *gin.Context) {
 }
 
 func GetMovies(c *gin.Context) {
+	genre := c.Query("genre")
+
 	imdbIDs := []string{
 		"tt0371746",
 		"tt0800080",
@@ -143,7 +145,11 @@ func GetMovies(c *gin.Context) {
 
 	// Retrieve movies from the database
 	var movies []models.Movie
-	if err := initialisers.DB.Find(&movies).Error; err != nil {
+	query := initialisers.DB
+	if genre != "" {
+		query = query.Where("genre LIKE ?", "%"+genre+"%")
+	}
+	if err := query.Find(&movies).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

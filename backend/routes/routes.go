@@ -20,6 +20,11 @@ func SetupRoutes(router *gin.Engine) {
 	router.POST("/api/webposts", controllers.CreateWebPost)
 	router.PATCH("/api/webposts/:id", controllers.UpdateWebPost)
 
+	// Review routes (no JWT middleware)
+	router.GET("/api/reviews", controllers.GetReviews)
+	router.POST("/api/reviews", controllers.AddReview)
+	router.PATCH("/api/reviews/:id", controllers.UpdateReview)
+
 	// Movie details route (no JWT middleware)
 	router.GET("/api/movies", controllers.GetMovies)
 

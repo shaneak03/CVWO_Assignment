@@ -18,7 +18,7 @@ func init() {
 	initialisers.ConnectToDb()
 
 	// Run migrations
-	initialisers.DB.AutoMigrate(&models.Movie{})
+	initialisers.DB.AutoMigrate(&models.Movie{}, &models.Review{})
 }
 
 func main() {
@@ -28,7 +28,7 @@ func main() {
 
 	//CORS configuration to allow Authorization header
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"*"},
+		AllowOrigins:     []string{"http://localhost:5173"}, // Specify the allowed origin
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length", "Authorization"},
