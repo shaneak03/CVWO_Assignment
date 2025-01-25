@@ -27,7 +27,11 @@ function Login() {
     });
 
     if (error) {
-      setError(error.message);
+      if (error.status === 400) {
+        setError("Invalid email or password. Please try again.");
+      } else {
+        setError(error.message);
+      }
     } else {
       navigate("/");
     }
