@@ -18,7 +18,7 @@ func init() {
 	initialisers.ConnectToDb()
 
 	// Run migrations
-	initialisers.DB.AutoMigrate(&models.Movie{}, &models.Review{})
+	initialisers.DB.AutoMigrate(&models.Movie{}, &models.Review{}, &models.WebPost{})
 }
 
 func main() {
