@@ -57,16 +57,19 @@ const MovieDetails = () => {
         }
         const postsData = await postsResponse.json();
         console.log("Fetched posts:", postsData); // Add logging
-        setPosts(postsData);
+        setPosts(postsData || []);
 
         const reviewsResponse = await fetch(`${ENDPOINT}/api/reviews/movie/${encodedTitle}`);
         if (!reviewsResponse.ok) {
           throw new Error(`Error fetching reviews: ${reviewsResponse.statusText}`);
         }
         const reviewsData = await reviewsResponse.json();
-        setReviews(reviewsData);
+        setReviews(reviewsData || []);
 
-        const userIDs = [...new Set([...postsData.map((post: Post) => post.user_id), ...reviewsData.map((review: Review) => review.user_id)])];
+        const userIDs = [...new Set([
+          ...(postsData || []).map((post: Post) => post.user_id),
+          ...(reviewsData || []).map((review: Review) => review.user_id)
+        ])];
         const usernamePromises = userIDs.map(async (userID) => {
           const response = await fetch(`${ENDPOINT}/api/users/${userID}`);
           const data = await response.json();
