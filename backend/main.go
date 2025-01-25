@@ -32,7 +32,7 @@ func main() {
 
 	//CORS configuration to allow Authorization header
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173"}, // Specify the allowed origin
+		AllowOrigins:     []string{"*"}, // Specify the allowed origin
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length", "Authorization"},
