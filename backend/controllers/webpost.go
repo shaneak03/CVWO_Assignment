@@ -35,6 +35,10 @@ type WebPostResponse struct {
 	HasDownvoted bool     `json:"has_downvoted"`
 }
 
+type VoteRequest struct {
+	UserID string `json:"user_id"`
+}
+
 func CreateWebPost(c *gin.Context) {
 	var request WebPostRequest
 	if err := c.ShouldBindJSON(&request); err != nil {
