@@ -4,7 +4,6 @@ import (
 	"log"
 	"os"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
 	"github.com/shaneak03/CVWO_Assignment/backend/models"
@@ -28,16 +27,8 @@ func main() {
 
 	r := gin.Default()
 
-	//middleware
-
-	//CORS configuration to allow Authorization header
-	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"*"}, // Specify the allowed origin
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
-		ExposeHeaders:    []string{"Content-Length", "Authorization"},
-		AllowCredentials: true,
-	}))
+	// Apply CORS middleware
+	r.Use(initialisers.SetupCORS())
 
 	// Setup routes
 	routes.SetupRoutes(r)
