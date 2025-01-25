@@ -15,28 +15,39 @@ import Navbar from './components/Navbar';
 
 export const ENDPOINT = import.meta.env.VITE_SERVER_API_URL;
 
-const API = (url: string) => fetch(`${ENDPOINT}/${url}`,  {
-  method: 'GET',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  credentials: 'include', 
-}).then((r) => r.json());
+interface WebPost {
+  id: number;
+  title: string;
+  content: string;
+  user_id: string;
+  movie: string;
+  tags: string[];
+  spoiler: boolean;
+  created_at: string;
+}
 
 function AppContent() {
-  const [webposts, setWebposts] = useState([]);
+  const [webPosts, setWebPosts] = useState<WebPost[]>([]);
   const { isLoggedIn, userId } = useUser();
   const location = useLocation();
 
   useEffect(() => {
-    if (isLoggedIn) {
-      API('api/webposts').then((data) => {
-        setWebposts(data);
-      }).catch((error) => {
-        console.error('Error fetching web posts:', error);
-      });
+    async function fetchWebPosts() {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_SERVER_API_URL}/api/webposts`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch web posts");
+        }
+        const data = await response.json();
+        console.log("Fetched web posts:", data); // Log the fetched web posts
+        setWebPosts(data);
+      } catch (error) {
+        console.error("Error fetching web posts:", error);
+      }
     }
-  }, [isLoggedIn]);
+
+    fetchWebPosts();
+  }, []);
 
   const hideNavbarRoutes = ["/login", "/register"];
 
