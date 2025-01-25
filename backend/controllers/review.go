@@ -36,6 +36,8 @@ func GetReviews(c *gin.Context) {
 
 func UpdateReview(c *gin.Context) {
 	id := c.Param("id")
+	log.Printf("Updating review with ID: %s", id) // Add logging
+
 	var request struct {
 		Movie   string `json:"movie"`
 		Content string `json:"content"`
@@ -49,21 +51,24 @@ func UpdateReview(c *gin.Context) {
 
 	var review models.Review
 	if err := initialisers.DB.First(&review, "id = ?", id).Error; err != nil {
+		log.Printf("Review not found: %s", err.Error()) // Add logging
 		c.JSON(http.StatusNotFound, gin.H{"error": "Review not found"})
 		return
 	}
 
-	review.Movie = request.Movie
-	review.Content = request.Content
-	review.Rating = request.Rating
-	review.Spoiler = request.Spoiler
-
-	if err := initialisers.DB.Save(&review).Error; err != nil {
-		log.Println("Error updating review:", err)
+	// Use Updates method to update the review
+	if err := initialisers.DB.Model(&review).Updates(models.Review{
+		Movie:   request.Movie,
+		Content: request.Content,
+		Spoiler: request.Spoiler,
+		Rating:  request.Rating,
+	}).Error; err != nil {
+		log.Printf("Error updating review: %s", err.Error()) // Add logging
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
+	log.Printf("Review updated successfully: %+v", review) // Add logging
 	c.JSON(http.StatusOK, gin.H{"message": "Review updated successfully"})
 }
 

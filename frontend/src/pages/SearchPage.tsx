@@ -13,6 +13,8 @@ interface Post {
   tags: string[];
   spoiler: boolean;
   votes: number;
+  hasUpvoted: boolean;
+  hasDownvoted: boolean;
 }
 
 interface PostWithUsername extends Post {
@@ -72,17 +74,22 @@ function SearchPage({ posts }: SearchPageProps) {
           alignItems="center" 
           gap={3}
         >
-          {filteredPosts.map((post, index) => (
-            <PostCard
-              key={index}
-              title={post.title}
-              content={post.content}
-              tags={post.tags}
-              spoiler={post.spoiler}
-              username={post.username}
-              votes={post.votes}
-            />
-          ))}
+          {filteredPosts.map((post, index) => {
+            return (
+              <PostCard
+                key={index}
+                id={post.id} 
+                title={post.title}
+                content={post.content}
+                tags={post.tags}
+                spoiler={post.spoiler}
+                username={post.username}
+                votes={post.votes}
+                hasUpvoted={post.hasUpvoted}
+                hasDownvoted={post.hasDownvoted}
+              />
+            );
+          })}
           {filteredPosts.length === 0 && (
             <Typography variant="body1" sx={{ textAlign: "center", width: "100%" }}>
               No posts found.

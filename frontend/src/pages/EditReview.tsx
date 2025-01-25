@@ -48,7 +48,7 @@ function EditReview() {
 
     try {
       const response = await fetch(`${ENDPOINT}/api/reviews/${reviewId}`, {
-        method: "PATCH",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },

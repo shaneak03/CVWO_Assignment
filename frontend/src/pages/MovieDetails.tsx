@@ -26,6 +26,8 @@ interface Post {
   tags: string[];
   spoiler: boolean;
   votes: number;
+  hasUpvoted: boolean;
+  hasDownvoted: boolean;
 }
 
 interface Review {
@@ -54,6 +56,7 @@ const MovieDetails = () => {
           throw new Error(`Error fetching posts: ${postsResponse.statusText}`);
         }
         const postsData = await postsResponse.json();
+        console.log("Fetched posts:", postsData); // Add logging
         setPosts(postsData);
 
         const reviewsResponse = await fetch(`${ENDPOINT}/api/reviews/movie/${encodedTitle}`);
@@ -140,17 +143,22 @@ const MovieDetails = () => {
           Posts
         </Typography>
         {posts.length > 0 ? (
-          posts.map((post) => (
-            <PostCard
-              key={post.id}
-              title={post.title}
-              content={post.content}
-              tags={post.tags}
-              spoiler={post.spoiler}
-              username={usernames[post.user_id] || post.user_id}
-              votes={post.votes}
-            />
-          ))
+          posts.map((post) => {
+            return (
+              <PostCard
+                key={post.id}
+                id={post.id}
+                title={post.title}
+                content={post.content}
+                tags={post.tags}
+                spoiler={post.spoiler}
+                username={usernames[post.user_id] || post.user_id}
+                votes={post.votes}
+                hasUpvoted={post.hasUpvoted}
+                hasDownvoted={post.hasDownvoted}
+              />
+            );
+          })
         ) : (
           <Typography variant="body1" color="textSecondary">
             No posts found.

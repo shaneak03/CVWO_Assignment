@@ -15,18 +15,20 @@ func SetupRoutes(router *gin.Engine) {
 	router.POST("/api/login", initialisers.JWTMiddleware(), controllers.Login)
 	router.POST("/api/logout", initialisers.JWTMiddleware(), controllers.Logout)
 
-	// WebPost routes (no JWT middleware)
+	// WebPost routes (without JWT middleware for upvote/downvote)
 	router.GET("/api/webposts", controllers.GetWebPosts)
 	router.POST("/api/webposts", controllers.CreateWebPost)
-	router.PATCH("/api/webposts/:id", controllers.UpdateWebPost)
+	router.PUT("/api/webposts/:id", controllers.UpdateWebPost)
 	router.DELETE("/api/webposts/:id", controllers.DeleteWebPost)
 	router.GET("/api/webposts/movie/:movieTitle", controllers.GetWebPostsByMovie)
 	router.GET("/api/webposts/user/:userID", controllers.GetWebPostsByUser)
+	router.PUT("/api/webposts/:id/upvote", controllers.UpvoteWebPost)
+	router.PUT("/api/webposts/:id/downvote", controllers.DownvoteWebPost)
 
 	// Review routes (no JWT middleware)
 	router.GET("/api/reviews", controllers.GetReviews)
 	router.POST("/api/reviews", controllers.AddReview)
-	router.PATCH("/api/reviews/:id", controllers.UpdateReview)
+	router.PUT("/api/reviews/:id", controllers.UpdateReview)
 	router.DELETE("/api/reviews/:id", controllers.DeleteReview)
 	router.GET("/api/reviews/movie/:movieTitle", controllers.GetReviewsByMovie)
 

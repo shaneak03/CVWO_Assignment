@@ -67,7 +67,7 @@ function EditWebPost() {
 
     try {
       const response = await fetch(`${ENDPOINT}/api/webposts/${postId}`, {
-        method: "PATCH",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${data.session.access_token}`,

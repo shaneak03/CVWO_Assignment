@@ -14,47 +14,88 @@ import {
 import { red } from "@mui/material/colors";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import { useUser } from "../hooks/User";
+
+const ENDPOINT = import.meta.env.VITE_SERVER_API_URL;
 
 function PostCard({
+  id,
   title,
   content,
   tags,
   spoiler,
   username,
   votes,
+  hasUpvoted,
+  hasDownvoted,
 }: {
+  id: number;
   title: string;
   content: string;
   tags: string[];
   spoiler: boolean;
   username: string;
   votes: number;
+  hasUpvoted: boolean;
+  hasDownvoted: boolean;
 }) {
   const [showFullContent, setShowFullContent] = useState(false);
-  const [upvoted, setUpvoted] = useState(false);
-  const [downvoted, setDownvoted] = useState(false);
+  const [upvoted, setUpvoted] = useState(hasUpvoted);
+  const [downvoted, setDownvoted] = useState(hasDownvoted);
+  const [currentVotes, setCurrentVotes] = useState(votes);
 
-  const netVotes = upvoted ? 1 : downvoted ? -1 : 0;
+  const { userId } = useUser();
+
+  useEffect(() => {
+    setUpvoted(hasUpvoted);
+    setDownvoted(hasDownvoted);
+  }, [hasUpvoted, hasDownvoted]);
 
   function handleShowMore() {
     setShowFullContent(!showFullContent);
   }
 
-  function handleUpvote() {
-    if (upvoted) {
-      setUpvoted(false);
-    } else {
-      setUpvoted(true);
-      setDownvoted(false);
+  async function handleUpvote() {
+    try {
+      if (upvoted) {
+        setUpvoted(false);
+        setCurrentVotes(currentVotes - 1);
+      } else {
+        setUpvoted(true);
+        setDownvoted(false);
+        setCurrentVotes(currentVotes + 1);
+      }
+      await fetch(`${ENDPOINT}/api/webposts/${id}/upvote`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ user_id: userId })
+      });
+    } catch (error) {
+      console.error("Error upvoting post:", error);
     }
   }
 
-  function handleDownvote() {
-    if (downvoted) {
-      setDownvoted(false);
-    } else {
-      setDownvoted(true);
-      setUpvoted(false);
+  async function handleDownvote() {
+    try {
+      if (downvoted) {
+        setDownvoted(false);
+        setCurrentVotes(currentVotes + 1);
+      } else {
+        setDownvoted(true);
+        setUpvoted(false);
+        setCurrentVotes(currentVotes - 1);
+      }
+      await fetch(`${ENDPOINT}/api/webposts/${id}/downvote`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ user_id: userId })
+      });
+    } catch (error) {
+      console.error("Error downvoting post:", error);
     }
   }
 
@@ -115,7 +156,7 @@ function PostCard({
           >
             <ArrowUpwardIcon />
           </IconButton>
-          <Typography variant="body2">{Number(votes) + netVotes}</Typography>
+          <Typography variant="body2">{currentVotes}</Typography>
           <IconButton
             onClick={handleDownvote}
             color={downvoted ? "error" : "default"}

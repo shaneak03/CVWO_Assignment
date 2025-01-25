@@ -26,6 +26,8 @@ interface WebPost {
   tags: string[];
   spoiler: boolean;
   votes: number;
+  hasUpvoted: boolean;
+  hasDownvoted: boolean;
 }
 
 function AppContent() {
@@ -40,7 +42,12 @@ function AppContent() {
       try {
         const response = await fetch(`${ENDPOINT}/api/webposts`);
         const data = await response.json();
-        setWebPosts(data);
+        const postsWithVoteStatus = data.map((post: any) => ({
+          ...post,
+          hasUpvoted: post.hasUpvoted || false,
+          hasDownvoted: post.hasDownvoted || false,
+        }));
+        setWebPosts(postsWithVoteStatus);
       } catch (error) {
         console.error("Error fetching posts:", error);
       }
@@ -55,16 +62,7 @@ function AppContent() {
         <Route path="/" element={<Home />} />
         <Route path="/addwebpost" element={isLoggedIn ? <AddWebPost /> : <Navigate to="/login" />} />
         <Route path="/addreview" element={isLoggedIn ? <AddReview /> : <Navigate to="/login" />} />
-        <Route path="/searchpage" element={<SearchPage posts={webPosts.map(post => ({
-          id: post.id,
-          title: post.title,
-          content: post.content,
-          user_id: post.user_id,
-          movie: post.movie,
-          tags: post.tags,
-          spoiler: post.spoiler,
-          votes: post.votes,
-        }))} />} />
+        <Route path="/searchpage" element={<SearchPage posts={webPosts} />} />
         <Route path="/movies" element={<Movies />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

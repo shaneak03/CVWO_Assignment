@@ -22,6 +22,10 @@ func init() {
 }
 
 func main() {
+	// Ensure Gin logger is configured to print logs to the console
+	gin.SetMode(gin.DebugMode)
+	gin.DefaultWriter = os.Stdout
+
 	r := gin.Default()
 
 	//middleware
