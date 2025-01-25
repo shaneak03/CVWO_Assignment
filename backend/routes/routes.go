@@ -11,7 +11,7 @@ func SetupRoutes(router *gin.Engine) {
 	router.Use(initialisers.SetupCORS())
 
 	// Authentication routes (with JWT middleware)
-	router.POST("/api/register", initialisers.JWTMiddleware(), controllers.Register)
+	router.POST("/api/register", controllers.Register)
 	router.POST("/api/login", initialisers.JWTMiddleware(), controllers.Login)
 	router.POST("/api/logout", initialisers.JWTMiddleware(), controllers.Logout)
 
