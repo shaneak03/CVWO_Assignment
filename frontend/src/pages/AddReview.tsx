@@ -68,7 +68,6 @@ function AddReview() {
       setRating(5);
       setError(null);
 
-      // Alert user and redirect to home
       alert("Review submitted successfully!");
       navigate("/");
     } catch (error) {

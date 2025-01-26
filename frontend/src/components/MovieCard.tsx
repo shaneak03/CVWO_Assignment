@@ -5,7 +5,6 @@ import {
   Typography,
 } from "@mui/material";
 
-// Define the interface for movies
 interface Movie {
   title: string;
   year: string;
@@ -15,7 +14,7 @@ interface Movie {
   actors: string;
   plot: string;
   poster: string;
-  onClick?: () => void; // Add onClick prop
+  onClick?: () => void; 
 }
 
 const MovieCard = ({ title, year, runtime, genre, poster, onClick }: Movie) => {

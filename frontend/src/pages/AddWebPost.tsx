@@ -59,7 +59,7 @@ function AddWebPost() {
       title,
       content,
       user_id: data.session.user.id,
-      movie: movieTitle, // Use movie title from state
+      movie: movieTitle,
       tags,
       spoiler,
     };
@@ -82,14 +82,12 @@ function AddWebPost() {
       const responseData = await response.json();
       console.log(responseData);
 
-      // Reset Form
       setTitle("");
       setContent("");
       setSpoiler(false);
       setTags([]);
       setError(null);
 
-      // Alert user and redirect to home
       alert("Web post submitted successfully!");
       navigate("/");
     } catch (err) {

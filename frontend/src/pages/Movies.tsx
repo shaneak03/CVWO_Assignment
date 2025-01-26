@@ -26,7 +26,6 @@ function Movies() {
   useEffect(() => {
     async function fetchMovies() {
       try {
-        // Log the ENDPOINT value
         console.log("API Endpoint:", ENDPOINT);
 
         const response = await fetch(`${ENDPOINT}/api/movies`);
@@ -34,7 +33,6 @@ function Movies() {
         console.log("Fetched movies:", data);
         if (Array.isArray(data)) {
           setMovies(data);
-          // Log the fetched movies
           console.log("Movies data:", data);
         } else {
           console.error("Fetched data is not an array:", data);

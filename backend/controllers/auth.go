@@ -41,9 +41,6 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	// Verify password (if applicable)
-	// Assuming Supabase handles password verification on the frontend
-
 	// Generate JWT token
 	token, err := initialisers.GenerateJWT(user.ID)
 	if err != nil {
@@ -69,7 +66,6 @@ func Login(c *gin.Context) {
 }
 
 func Logout(c *gin.Context) {
-	// Handle OPTIONS request
 	if c.Request.Method == http.MethodOptions {
 		c.Status(http.StatusNoContent)
 		return

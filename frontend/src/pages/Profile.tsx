@@ -195,7 +195,7 @@ function Profile() {
                 <CardContent>
                   <Typography variant="h6">{post.title}</Typography>
                   <Typography variant="body2" color="textSecondary">
-                    {new Date(post.created_at).toLocaleDateString()} {/* Ensure the date is correctly parsed */}
+                    {new Date(post.created_at).toLocaleDateString()} 
                   </Typography>
                   <Typography variant="body1">{post.content}</Typography>
                   <Button

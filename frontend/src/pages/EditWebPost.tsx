@@ -85,7 +85,6 @@ function EditWebPost() {
 
       setError(null);
 
-      // Alert user and redirect to profile
       alert("Web post updated successfully!");
       navigate("/profile");
     } catch (err) {

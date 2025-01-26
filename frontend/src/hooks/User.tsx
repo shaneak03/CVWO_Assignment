@@ -51,7 +51,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
 
     checkUser();
 
-    // Listen for log in / log out
     const { data: authListener } = supabase.auth.onAuthStateChange((_, session) => {
       if (session?.user) {
         setUserState((prevState) => ({
