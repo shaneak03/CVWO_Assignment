@@ -17,7 +17,7 @@ Click [here](https://cvwo-assignment-c89r.onrender.com/) to access the deployed 
   
 ## Setting up locally (NOT RECOMMENDED)
 ### Use deployed page above if possible
-### 1. Set up a supabase account 
+### 1. Supabase account created
 #### - I have created a new database for local deployment
 #### - The supabase API keys below are not for the deployed site
 ### 2. Clone the repository
