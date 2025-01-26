@@ -10,6 +10,9 @@ func SetupRoutes(router *gin.Engine) {
 	// Apply CORS middleware
 	router.Use(initialisers.SetupCORS())
 
+	// Apply logging middleware
+	router.Use(gin.Logger())
+
 	// Authentication routes (with JWT middleware)
 	router.POST("/api/register", controllers.Register)
 	router.POST("/api/login", initialisers.JWTMiddleware(), controllers.Login)
@@ -24,6 +27,12 @@ func SetupRoutes(router *gin.Engine) {
 	router.GET("/api/webposts/user/:userID", controllers.GetWebPostsByUser)
 	router.PUT("/api/webposts/:id/upvote", controllers.UpvoteWebPost)
 	router.PUT("/api/webposts/:id/downvote", controllers.DownvoteWebPost)
+
+	// Comment routes (no JWT middleware)
+	router.GET("/api/webposts/:id/comments", controllers.GetComments)
+	router.POST("/api/webposts/:id/comments", controllers.AddComment)
+	router.PUT("/api/comments/:commentID", controllers.EditComment)
+	router.DELETE("/api/comments/:commentID", controllers.DeleteComment)
 
 	// Review routes (no JWT middleware)
 	router.GET("/api/reviews", controllers.GetReviews)

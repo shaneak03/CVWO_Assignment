@@ -39,6 +39,17 @@ type VoteRequest struct {
 	UserID string `json:"user_id"`
 }
 
+type CommentRequest struct {
+	Content string `json:"content"`
+	UserID  string `json:"user_id"`
+}
+
+type CommentResponse struct {
+	ID      uint   `json:"id"`
+	Content string `json:"content"`
+	UserID  string `json:"user_id"`
+}
+
 func CreateWebPost(c *gin.Context) {
 	var request WebPostRequest
 	if err := c.ShouldBindJSON(&request); err != nil {

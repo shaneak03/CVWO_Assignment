@@ -10,11 +10,13 @@ import {
   Avatar,
   Chip,
   IconButton,
+  TextField,
 } from "@mui/material";
 import { red } from "@mui/material/colors";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { useUser } from "../hooks/User";
+import Comment from "./Comment";
 
 const ENDPOINT = import.meta.env.VITE_SERVER_API_URL;
 
@@ -28,6 +30,7 @@ function PostCard({
   votes,
   hasUpvoted,
   hasDownvoted,
+  comments = [],
 }: {
   id: number;
   title: string;
@@ -38,11 +41,15 @@ function PostCard({
   votes: number;
   hasUpvoted: boolean;
   hasDownvoted: boolean;
+  comments: { user_id: string; content: string }[];
 }) {
   const [showFullContent, setShowFullContent] = useState(false);
   const [upvoted, setUpvoted] = useState(hasUpvoted);
   const [downvoted, setDownvoted] = useState(hasDownvoted);
   const [currentVotes, setCurrentVotes] = useState(votes);
+  const [showCommentField, setShowCommentField] = useState(false);
+  const [newComment, setNewComment] = useState("");
+  const [postComments, setPostComments] = useState(comments);
 
   const { userId } = useUser();
 
@@ -50,6 +57,19 @@ function PostCard({
     setUpvoted(hasUpvoted);
     setDownvoted(hasDownvoted);
   }, [hasUpvoted, hasDownvoted]);
+
+  useEffect(() => {
+    async function fetchComments() {
+      try {
+        const response = await fetch(`${ENDPOINT}/api/webposts/${id}/comments`);
+        const data = await response.json();
+        setPostComments(data || []);
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      }
+    }
+    fetchComments();
+  }, [id]);
 
   function handleShowMore() {
     setShowFullContent(!showFullContent);
@@ -96,6 +116,39 @@ function PostCard({
       });
     } catch (error) {
       console.error("Error downvoting post:", error);
+    }
+  }
+
+  function handleShowCommentField() {
+    setShowCommentField(!showCommentField); 
+  }
+
+  function handleCommentChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setNewComment(event.target.value);
+  }
+
+  async function handleAddComment() {
+    if (newComment.trim() === "") return;
+
+    try {
+      const response = await fetch(`${ENDPOINT}/api/webposts/${id}/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ user_id: userId, content: newComment })
+      });
+
+      if (response.ok) {
+        const newCommentData = await response.json();
+        setPostComments([...postComments, newCommentData]);
+        setNewComment("");
+        setShowCommentField(false);
+      } else {
+        console.error("Error adding comment:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error adding comment:", error);
     }
   }
 
@@ -168,6 +221,44 @@ function PostCard({
           {showFullContent ? "Show Less" : "Show More"}
         </Button>
       </CardActions>
+
+      {showFullContent && (
+        <>
+          <CardContent>
+            <Typography variant="h6" sx={{ marginTop: "1rem" }}>
+              Comments
+            </Typography>
+            {postComments.length > 0 ? (
+              postComments.map((comment, index) => (
+                <Comment key={index} user_id={comment.user_id} content={comment.content} />
+              ))
+            ) : (
+              <Typography variant="body2" color="textSecondary">
+                No comments yet.
+              </Typography>
+            )}
+          </CardContent>
+          <CardActions sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+            <Button size="small" variant="outlined" onClick={handleShowCommentField}>
+              {showCommentField ? "Cancel" : "Add Comment"}
+            </Button>
+            {showCommentField && (
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 1, marginTop: 1 }}>
+                <TextField
+                  label="Write a comment"
+                  variant="outlined"
+                  fullWidth
+                  value={newComment}
+                  onChange={handleCommentChange}
+                />
+                <Button size="small" variant="contained" onClick={handleAddComment}>
+                  Submit
+                </Button>
+              </Box>
+            )}
+          </CardActions>
+        </>
+      )}
     </Card>
   );
 }
