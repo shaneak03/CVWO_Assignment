@@ -3,6 +3,8 @@
 ## About
 Created by Shane Arkar Kyaw
 
+This is my NUS Computing for Voluntery Welfare Organisations(CVWO) Winter Assignment project and this is my first time using React as a frontend and Go as a backend.
+
 Click [here](https://cvwo-assignment-c89r.onrender.com/) to access the deployed page.
 
 ## Features
