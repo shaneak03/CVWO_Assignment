@@ -87,6 +87,7 @@ function SearchPage({ posts }: SearchPageProps) {
                 votes={post.votes}
                 hasUpvoted={post.hasUpvoted}
                 hasDownvoted={post.hasDownvoted}
+                comments={[]}
               />
             );
           })}
