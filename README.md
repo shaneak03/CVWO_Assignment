@@ -12,8 +12,9 @@ Click [here](https://cvwo-assignment-c89r.onrender.com/) to access the deployed 
 - Find your favorite Marvel Movie and discuss/review it (more movies to be added in the future)
 - Click on your favorite movie to add posts and add reviews
 - Upvote/downvote other user posts
+- Comment your opinion on other's posts
 - Search for posts related to the genres you like
-- See your own posts and reviews in your profile page and choose to edit/delete it
+- See your own posts, reviews and comments in your profile page and choose to edit/delete it
   
 ## Setting up locally (NOT RECOMMENDED)
 ### Use deployed page above if possible
