@@ -47,13 +47,15 @@ func CreateWebPost(c *gin.Context) {
 	}
 
 	webPost := models.WebPost{
-		Title:   request.Title,
-		Content: request.Content,
-		UserID:  request.UserID,
-		Movie:   request.Movie,
-		Tags:    request.Tags,
-		Spoiler: request.Spoiler,
-		Votes:   request.Votes,
+		Title:       request.Title,
+		Content:     request.Content,
+		UserID:      request.UserID,
+		Movie:       request.Movie,
+		Tags:        request.Tags,
+		Spoiler:     request.Spoiler,
+		Votes:       request.Votes,
+		UpvotedBy:   []string{},
+		DownvotedBy: []string{},
 	}
 
 	if err := initialisers.DB.Create(&webPost).Error; err != nil {
