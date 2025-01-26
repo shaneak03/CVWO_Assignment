@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Typography, Grid, Card, CardContent, Avatar, Button } from "@mui/material";
+import { Box, Typography, Grid, Card, CardContent, Avatar, Button, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import supabase from "../supabase";
 
@@ -24,6 +24,13 @@ interface Review {
   spoiler: boolean; 
 }
 
+interface Comment {
+  id: number;
+  content: string;
+  created_at: string;
+  post_id: number;
+}
+
 interface UserProfile {
   username: string;
   email: string;
@@ -32,7 +39,10 @@ interface UserProfile {
 function Profile() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
+  const [editedCommentContent, setEditedCommentContent] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -55,12 +65,12 @@ function Profile() {
             Authorization: `Bearer ${sessionData.session.access_token}`,
           },
         });
-        const responseText = await response.text(); // Get response text
-        console.log("Response Text:", responseText); // Log response text
+        const responseText = await response.text(); 
+        console.log("Response Text:", responseText); 
         if (!response.ok) {
           throw new Error(`Failed to fetch user details: ${responseText}`);
         }
-        const profileData = JSON.parse(responseText); // Parse response text as JSON
+        const profileData = JSON.parse(responseText); 
         setUserProfile(profileData);
       } catch (error) {
         console.error("Error fetching user profile:", error);
@@ -104,9 +114,28 @@ function Profile() {
       }
     }
 
+    async function fetchComments() {
+      const { data } = await supabase.auth.getUser();
+      const user = data.user;
+      if (!user) return;
+
+      const { data: commentsData, error: commentsError } = await supabase
+        .from("comments")
+        .select("*")
+        .eq("user_id", user.id)
+        .is("deleted_at", null); 
+
+      if (commentsError) {
+        console.error("Error fetching comments:", commentsError);
+      } else {
+        setComments(commentsData);
+      }
+    }
+
     fetchUserProfile();
     fetchPosts();
     fetchReviews();
+    fetchComments();
   }, []);
 
   async function deletePost(postId: number) {
@@ -162,6 +191,56 @@ function Profile() {
       setReviews(reviews.filter(review => review.id !== reviewId));
     } catch (error) {
       console.error("Error deleting review:", error);
+    }
+  }
+
+  async function deleteComment(commentId: number) {
+    if (!window.confirm("Are you sure you want to delete this comment?")) {
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase.auth.getSession();
+      if (error || !data.session) {
+        throw new Error("Failed to get session");
+      }
+
+      const response = await fetch(`${ENDPOINT}/api/comments/${commentId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${data.session.access_token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete comment");
+      }
+
+      setComments(comments.filter(comment => comment.id !== commentId));
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+    }
+  }
+
+  async function editComment(commentId: number) {
+    try {
+      const response = await fetch(`${ENDPOINT}/api/comments/${commentId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ content: editedCommentContent })
+      });
+
+      if (response.ok) {
+        setComments(comments.map(comment => comment.id === commentId ? { ...comment, content: editedCommentContent } : comment));
+        setEditingCommentId(null);
+        setEditedCommentContent("");
+      } else {
+        console.error("Error editing comment:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error editing comment:", error);
     }
   }
 
@@ -254,6 +333,67 @@ function Profile() {
                   >
                     Delete
                   </Button>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      )}
+
+      <Typography variant="h5" gutterBottom sx={{ marginTop: 4 }}>
+        Comments
+      </Typography>
+      {comments.length === 0 ? (
+        <Typography variant="body1" sx={{ textAlign: "center" }}>
+          No comments found.
+        </Typography>
+      ) : (
+        <Grid container spacing={3}>
+          {comments.map((comment) => (
+            <Grid item xs={12} sm={6} md={4} key={comment.id}>
+              <Card>
+                <CardContent>
+                  {editingCommentId === comment.id ? (
+                    <>
+                      <TextField
+                        value={editedCommentContent}
+                        onChange={(e) => setEditedCommentContent(e.target.value)}
+                        fullWidth
+                        multiline
+                      />
+                      <Button onClick={() => editComment(comment.id)} sx={{ marginTop: 1 }}>
+                        Save
+                      </Button>
+                      <Button onClick={() => setEditingCommentId(null)} sx={{ marginTop: 1, marginLeft: 1 }}>
+                        Cancel
+                      </Button>
+                    </>
+                  ) : (
+                    <>
+                      <Typography variant="body1">{comment.content}</Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        {new Date(comment.created_at).toLocaleDateString()}
+                      </Typography>
+                      <Button
+                        variant="outlined"
+                        sx={{ marginTop: 2 }}
+                        onClick={() => {
+                          setEditingCommentId(comment.id);
+                          setEditedCommentContent(comment.content);
+                        }}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        sx={{ marginTop: 2, marginLeft: 1 }}
+                        onClick={() => deleteComment(comment.id)}
+                      >
+                        Delete
+                      </Button>
+                    </>
+                  )}
                 </CardContent>
               </Card>
             </Grid>

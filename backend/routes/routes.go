@@ -33,6 +33,7 @@ func SetupRoutes(router *gin.Engine) {
 	router.POST("/api/webposts/:id/comments", controllers.AddComment)
 	router.PUT("/api/comments/:commentID", controllers.EditComment)
 	router.DELETE("/api/comments/:commentID", controllers.DeleteComment)
+	router.GET("/api/comments/user/:userID", controllers.GetCommentsByUser) // Add route to get comments by user ID
 
 	// Review routes (no JWT middleware)
 	router.GET("/api/reviews", controllers.GetReviews)

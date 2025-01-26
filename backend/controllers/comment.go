@@ -41,7 +41,7 @@ func GetComments(c *gin.Context) {
 	log.Printf("Fetching comments for post ID: %s", postID)
 
 	var comments []models.Comment
-	if err := initialisers.DB.Where("post_id = ?", postID).Find(&comments).Error; err != nil {
+	if err := initialisers.DB.Where("post_id = ? AND deleted_at IS NULL", postID).Find(&comments).Error; err != nil {
 		log.Printf("Error fetching comments: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -57,6 +57,30 @@ func GetComments(c *gin.Context) {
 	}
 
 	log.Printf("Comments fetched successfully: %+v", response)
+	c.JSON(http.StatusOK, response)
+}
+
+func GetCommentsByUser(c *gin.Context) {
+	userID := c.Param("userID")
+	log.Printf("Fetching comments for user ID: %s", userID)
+
+	var comments []models.Comment
+	if err := initialisers.DB.Where("user_id = ? AND deleted_at IS NULL", userID).Find(&comments).Error; err != nil {
+		log.Printf("Error fetching comments: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	var response []CommentResponse
+	for _, comment := range comments {
+		response = append(response, CommentResponse{
+			ID:      comment.ID,
+			Content: comment.Content,
+			UserID:  comment.UserID,
+		})
+	}
+
+	log.Printf("Comments fetched successfully for user ID %s: %+v", userID, response)
 	c.JSON(http.StatusOK, response)
 }
 
