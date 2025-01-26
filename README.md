@@ -1,4 +1,4 @@
-# [CVWO Winter Assignment](cvwo-assignment-c89r.onrender.com)
+# CVWO Winter Assignment
 
 ## About
-Click on the header to access the deployed page.
+Click [here](cvwo-assignment-c89r.onrender.com) to access the deployed page.
